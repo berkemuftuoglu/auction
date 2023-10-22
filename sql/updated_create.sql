@@ -15,6 +15,7 @@ CREATE TABLE Item (
     reserve_price FLOAT(2),
     starting_price FLOAT(2),
     category ENUM('Electronics', 'Fashion', 'Home', 'Books', 'Other') NOT NULL,
+    status BOOL, -- 0 for available, 1 for sold
     photo MEDIUMBLOB --might need to change this
 );
 
@@ -31,6 +32,7 @@ CREATE TABLE Bids (
     auction_id INT(11) NOT NULL,
     user_id INT(11) NOT NULL,
     time_of_bid DATETIME NOT NULL,
+    price FLOAT(2),
     FOREIGN KEY (auction_id) REFERENCES Auction(auction_id),
     FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
