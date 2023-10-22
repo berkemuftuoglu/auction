@@ -24,6 +24,7 @@ CREATE TABLE Auction (
     item_id INT(11),
     start_time DATETIME NOT NULL,
     end_time DATETIME NOT NULL,
+    auction_title VARCHAR(255),
     FOREIGN KEY (item_id) REFERENCES Item(item_id)
 );
 
