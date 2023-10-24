@@ -8,22 +8,31 @@ export MYSQL_PWD=$DB_PASSWORD  # This will avoid the password warning
 # Default MAMP Variables
 DIRECTORY="./sql"  # Relative path to the SQL files from the script's location
 DB_HOST=${DB_HOST:-"localhost"}  # Default: localhost
-DB_NAME=${DB_NAME:-"mysql"}  # Default MAMP DB: mysql
+DB_NAME=${DB_NAME:-"auction"}  # Default MAMP DB: mysql
 SOCKET_PATH="/Applications/MAMP/tmp/mysql/mysql.sock"  # MAMP MySQL socket path
 
-# Navigate to the directory
-cd $DIRECTORY
+# Check if user provided an argument for the SQL file
+if [ "$#" -ne 1 ]; then
+    echo "Please provide the name of the SQL file without the .sql extension (e.g., 'create')."
+    exit 1
+fi
 
-# Loop through each SQL file in the directory and execute it
-for sql_file in *.sql; do
-    echo "Executing $sql_file..."
-    mysql --socket=$SOCKET_PATH -h $DB_HOST -u $DB_USER $DB_NAME < $sql_file
-    if [ $? -eq 0 ]; then
-        echo "$sql_file executed successfully!"
-    else
-        echo "Error executing $sql_file!"
-    fi
-done
+SQL_FILE="$DIRECTORY/$1.sql"
+
+# Check if the file exists
+if [ ! -f "$SQL_FILE" ]; then
+    echo "File $SQL_FILE not found!"
+    exit 1
+fi
+
+# Execute the SQL file
+echo "Executing $SQL_FILE..."
+mysql --socket=$SOCKET_PATH -h $DB_HOST -u $DB_USER $DB_NAME < $SQL_FILE
+if [ $? -eq 0 ]; then
+    echo "$SQL_FILE executed successfully!"
+else
+    echo "Error executing $SQL_FILE!"
+fi
 
 # Optionally, unset the MYSQL_PWD variable at the end for security
 unset MYSQL_PWD
