@@ -8,7 +8,7 @@ export MYSQL_PWD=$DB_PASSWORD  # This will avoid the password warning
 # Default MAMP Variables
 DIRECTORY="./sql"  # Relative path to the SQL files from the script's location
 DB_HOST=${DB_HOST:-"localhost"}  # Default: localhost
-DB_NAME=${DB_NAME:-"auction"}  # Default MAMP DB: mysql
+DB_NAME=${DB_NAME:-"mysql"}  # Default MAMP DB: mysql
 SOCKET_PATH="/Applications/MAMP/tmp/mysql/mysql.sock"  # MAMP MySQL socket path
 
 # Check if user provided an argument for the SQL file
