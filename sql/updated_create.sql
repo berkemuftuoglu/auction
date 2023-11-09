@@ -12,19 +12,20 @@ CREATE TABLE Item (
     item_id INT(11) AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description VARCHAR(511),
-    reserve_price FLOAT(2),
-    starting_price FLOAT(2),
     category ENUM('Electronics', 'Fashion', 'Home', 'Books', 'Other') NOT NULL,
-    status BOOL, -- 0 for available, 1 for sold
-    photo MEDIUMBLOB --might need to change this
+    colour ENUM('Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Purple', 'Pink', 'White', 'Grey', 'Black', 'Brown', 'Other'),
+    condition ENUM('Great', 'Good', 'Okay', 'Poor'),
+    photo VARCHAR(255) -- filepath
 );
 
 CREATE TABLE Auction (
     auction_id INT(11) AUTO_INCREMENT PRIMARY KEY,
     item_id INT(11),
     start_time DATETIME NOT NULL,
-    end_time DATETIME NOT NULL,
+    end_time DATETIME NOT NULL, -- if end time in earlier than current time, then the auction is over
     auction_title VARCHAR(255),
+    reserve_price FLOAT(2),
+    starting_price FLOAT(2),
     FOREIGN KEY (item_id) REFERENCES Item(item_id)
 );
 
