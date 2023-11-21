@@ -21,8 +21,8 @@
 
   // TODO: Use item_id to make a query to the database.
   $item_query = "SELECT auction.auction_title,
-                        auction.start_date,
-                        auction.end_date,
+                        auction.start_time,
+                        auction.end_time,
                         item.name,
                         item.description,
                         item.photo
@@ -42,18 +42,36 @@
   $item = db_fetch_single($item_result);
   $title = $item['auction_title'];
   $description = $item['description'];
-  $end_time = new DateTime($item['end_date']); //NOT SURE ABOUT THIS ONE
+  $item_photo = $item['photo'];
+  $end_time = new DateTime($item['end_time']); //NOT SURE ABOUT THIS ONE
 
   // Get current price and number of bids
-  $bid_query = "SELECT MAX(price) as current_price, COUNT(*) as num_bids FROM bids WHERE auction_id = '$item_id'";
+  $bid_query = "SELECT b.price AS current_price, u.user_id, u.first_name, u.last_name, COUNT(*) AS num_bids
+              FROM Bids b
+              INNER JOIN Users u ON b.user_id = u.user_id
+              WHERE b.auction_id = '$item_id'
+              AND b.price = (SELECT MAX(price) FROM Bids WHERE auction_id = '$item_id')
+              GROUP BY b.price, u.user_id, u.first_name, u.last_name";
+  
   $bid_result = db_query($connection, $bid_query);
-  $bid_data = mysqli_fetch_assoc($bid_result);
-  $current_price = $bid_data['current_price'] ?: '0.00';
-  $num_bids = $bid_data['num_bids'];
+  $bid_data = db_fetch_single($bid_result);
+
+  // Check if there is any bid data
+  if ($bid_data) {
+      $current_price = $bid_data['current_price'] ?: '0.00';
+      $current_winner = $bid_data['first_name'] . ' ' . $bid_data['last_name']; // Concatenate first name and last name
+      $num_bids = $bid_data['num_bids'];
+  } else {
+      // Default values if no bids are found
+      $current_price = '0.00';
+      $current_winner = 'None';
+      $num_bids = 0;
+  }
+
 
   // Set watching
   $watching = false;
-  if ($loggedIn) {
+  if ($has_session) {
       $watchlist_query = "SELECT 1
                           FROM watchlist
                           WHERE user_id =
@@ -95,6 +113,8 @@
 
 <div class="container">
 
+
+
 <div class="row"> <!-- Row #1 with auction title + watch button -->
   <div class="col-sm-8"> <!-- Left col -->
     <h2 class="my-3"><?php echo($title); ?></h2>
@@ -116,6 +136,15 @@
   </div>
 </div>
 
+<div class="row"> <!-- Row #0 with item image -->
+  <div class="col-sm-8"> 
+    <?php if (!empty($item['photo'])): ?>
+      <img src="<?php echo $item['photo']; ?>" alt="Item Image" class="img-fluid">
+    <?php endif; ?>
+  </div>
+</div>
+
+
 <div class="row"> <!-- Row #2 with auction description + bidding info -->
   <div class="col-sm-8"> <!-- Left col with item info -->
 
@@ -134,7 +163,7 @@
       <?php
         // Query to fetch auction result details
         // TODO: Print the result of the auction here?
-        echo "<p>The winning bid was $" . number_format($current_price, 2) . " by user123.</p>";
+        echo "<p>The winning bid was $" . number_format($current_price, 2) . " " . $current_winner ."</p>";
       ?>
     <?php else: ?>
      Auction ends <?php echo(date_format($end_time, 'j M H:i') . $time_remaining) ?></p>  

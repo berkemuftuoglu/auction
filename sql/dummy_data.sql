@@ -9,7 +9,7 @@ VALUES
 -- Item Table
 INSERT INTO Item (name, description, category, colour, `condition`, photo)
 VALUES 
-    ('Smartphone', 'Brand new, in original packaging', 'Electronics', 'Black', 'Great', '/images/smartphone.jpg'),
+    ('Smartphone', 'Brand new, in original packaging', 'Electronics', 'Black', 'Great', '/photos/smartphone.jpg'),
     ('Vintage Bookshelf', 'Antique wooden bookshelf', 'Home', 'Brown', 'Good', '/images/bookshelf.jpg'),
     ('Designer Dress', 'Elegant evening dress', 'Fashion', 'Red', 'Great', '/images/dress.jpg'),
     ('Coffee Table', 'Modern glass coffee table', 'Home', 'White', 'Okay', '/images/coffee_table.jpg');
