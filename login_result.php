@@ -6,8 +6,6 @@ require_once('database.php');
 
 // For now, I will just set session variables and redirect.
 
-session_start();
-
 // Create database connection
 $connection = db_connect();
 
@@ -31,10 +29,11 @@ if (db_num_rows($result) === 1) {
     $_SESSION['account_type'] = $user['role'];
 
     echo('<div class="text-center">You are now logged in! You will be redirected shortly.</div>');
-    header("refresh:5;url=index.php");
+    header("refresh:2;url=browse.php");
 } else {
     // Login failed
     echo('<div class="text-center">Login failed. Invalid email or password.</div>');
+    header("refresh:2;url=login.php");
 }
 
 // Free result set and close database connection
