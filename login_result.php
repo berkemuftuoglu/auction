@@ -22,7 +22,7 @@ confirm_result_set($result);
 $user = db_fetch_single($result);
 
 
-if (mysqli_num_rows($result) === 1) {
+if (db_num_rows($result) === 1) {
     // Login successful
     $_SESSION['logged_in'] = true;
     $_SESSION['username'] = $username;
