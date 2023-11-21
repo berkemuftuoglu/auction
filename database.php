@@ -29,4 +29,28 @@
     }
   }
 
+    // Add this function to database.php to perform a query
+  function db_query($connection, $query) {
+    $result = mysqli_query($connection, $query);
+    confirm_result_set($result);
+    return $result;
+  }
+
+  // Function to fetch the single row of result
+  function db_fetch_single($result) {
+    return mysqli_fetch_assoc($result);
+  }
+
+  // Function to get the number of rows returned
+  function db_num_rows($result) {
+    return mysqli_num_rows($result);
+  }
+
+  function db_free_result($result) {
+    mysqli_free_result($result);
+  }
+
+
+
+
 ?>

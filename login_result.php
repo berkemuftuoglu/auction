@@ -19,6 +19,8 @@ $password = $_POST['password'];
 $query = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
 $result = mysqli_query($connection, $query);
 confirm_result_set($result);
+$user = db_fetch_single($result);
+
 
 if (mysqli_num_rows($result) === 1) {
     // Login successful
@@ -26,7 +28,7 @@ if (mysqli_num_rows($result) === 1) {
     $_SESSION['username'] = $username;
 
     // TODO: Set 'account_type' or other session variables as needed
-    $_SESSION['account_type'] = "buyer";
+    $_SESSION['account_type'] = $user['account_type'];
 
     echo('<div class="text-center">You are now logged in! You will be redirected shortly.</div>');
     header("refresh:5;url=index.php");

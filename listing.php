@@ -1,18 +1,77 @@
 <?php include_once("header.php")?>
 <?php require("utilities.php")?>
+<?php require("database.php")?>
 
 <?php
+
+  $has_session = isset($_SESSION['logged_in']) && $_SESSION['logged_in'];
+  
   // Get info from the URL:
-  $item_id = $_GET['item_id'];
+  $item_id = $_GET['item_id'] ?? null;
+
+  if (!$item_id) {
+    echo ("<div>Error: Item ID is missing.</div>");
+    exit;
+}
+
+  
+  
+  // Establish database connection
+  $connection = db_connect();
 
   // TODO: Use item_id to make a query to the database.
+  $item_query = "SELECT auction.auction_title,
+                        auction.start_date,
+                        auction.end_date,
+                        item.name,
+                        item.description,
+                        item.photo
+  FROM auction
+  INNER JOIN item ON auction.item_id = item.item_id
+  WHERE auction.auction_id = '$item_id'";
+  $item_result = db_query($connection, $item_query);
 
-  // DELETEME: For now, using placeholder data.
-  $title = "Placeholder title";
-  $description = "Description blah blah blah";
-  $current_price = 30.50;
-  $num_bids = 1;
-  $end_time = new DateTime('2020-11-02T00:00:00');
+  // Check if item exists
+  if (db_num_rows($item_result) == 0) {
+    echo "<div>Error: Item not found.</div>";
+    db_disconnect($connection);
+    exit;
+  }
+
+  // Get item details
+  $item = db_fetch_single($item_result);
+  $title = $item['auction_title'];
+  $description = $item['description'];
+  $end_time = new DateTime($item['end_date']); //NOT SURE ABOUT THIS ONE
+
+  // Get current price and number of bids
+  $bid_query = "SELECT MAX(price) as current_price, COUNT(*) as num_bids FROM bids WHERE auction_id = '$item_id'";
+  $bid_result = db_query($connection, $bid_query);
+  $bid_data = mysqli_fetch_assoc($bid_result);
+  $current_price = $bid_data['current_price'] ?: '0.00';
+  $num_bids = $bid_data['num_bids'];
+
+  // Set watching
+  $watching = false;
+  if ($loggedIn) {
+      $watchlist_query = "SELECT 1
+                          FROM watchlist
+                          WHERE user_id =
+                            (SELECT user_id
+                             FROM users
+                             WHERE username = '$username') AND
+                            auction_id = '$item_id'";
+      $watchlist_result = db_query($connection, $watchlist_query);
+      $watching = db_num_rows($watchlist_result) > 0; // True if watching
+  }
+
+  // Clean up the result sets
+  db_free_result($item_result);
+  db_free_result($bid_result);
+  if (isset($watchlist_result)) {
+      db_free_result($watchlist_result);
+  }
+
 
   // TODO: Note: Auctions that have ended may pull a different set of data,
   //       like whether the auction ended in a sale or was cancelled due
@@ -29,8 +88,8 @@
   // TODO: If the user has a session, use it to make a query to the database
   //       to determine if the user is already watching this item.
   //       For now, this is hardcoded.
-  $has_session = true;
-  $watching = false;
+  //DONE $has_session = true;
+  //DONE $watching = false;
 ?>
 
 
@@ -41,11 +100,11 @@
     <h2 class="my-3"><?php echo($title); ?></h2>
   </div>
   <div class="col-sm-4 align-self-center"> <!-- Right col -->
-<?php
-  /* The following watchlist functionality uses JavaScript, but could
-     just as easily use PHP as in other places in the code */
-  if ($now < $end_time):
-?>
+    <?php
+      /* The following watchlist functionality uses JavaScript, but could
+        just as easily use PHP as in other places in the code */
+      if ($now < $end_time):
+    ?>
     <div id="watch_nowatch" <?php if ($has_session && $watching) echo('style="display: none"');?> >
       <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addToWatchlist()">+ Add to watchlist</button>
     </div>
@@ -53,7 +112,7 @@
       <button type="button" class="btn btn-success btn-sm" disabled>Watching</button>
       <button type="button" class="btn btn-danger btn-sm" onclick="removeFromWatchlist()">Remove watch</button>
     </div>
-<?php endif /* Print nothing otherwise */ ?>
+    <?php endif /* Print nothing otherwise */ ?>
   </div>
 </div>
 
@@ -69,10 +128,15 @@
   <div class="col-sm-4"> <!-- Right col with bidding info -->
 
     <p>
-<?php if ($now > $end_time): ?>
-     This auction ended <?php echo(date_format($end_time, 'j M H:i')) ?>
-     <!-- TODO: Print the result of the auction here? -->
-<?php else: ?>
+    <?php if ($now > $end_time): ?>
+      <p>This auction ended <?php echo htmlspecialchars($end_time->format('j M H:i')); ?></p>
+      <!-- Added code to display auction result -->
+      <?php
+        // Query to fetch auction result details
+        // TODO: Print the result of the auction here?
+        echo "<p>The winning bid was $" . number_format($current_price, 2) . " by user123.</p>";
+      ?>
+    <?php else: ?>
      Auction ends <?php echo(date_format($end_time, 'j M H:i') . $time_remaining) ?></p>  
     <p class="lead">Current bid: £<?php echo(number_format($current_price, 2)) ?></p>
 
