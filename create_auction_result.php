@@ -23,17 +23,18 @@
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         //*******************************************************************************/
-        // NOTE: Check for required fields to be not null & compare with not null values in the database!
+        // NOTE: Check for required fields to be not null synchronize that with the database!
         // NOTE: Check that text fields only have text inside.
         // NOTE: Fix echo message to be redirected onto the same page!
+        // NOTE: Provide helpful feedback to the user!
         //******************************************************************************/
 
         if (empty($_POST['auctionTitle']) || empty($_POST['itemName']) ||
-        empty($_POST['auctionCategory']) || empty($_POST['itemColour']) ||
-        empty($_POST['itemCondition']) || empty($_POST['auctionStartPrice']) ||
-        empty($_POST['auctionEndDate']) ) {
-                //$errorMessage = "Please fill in all required fields.";
-                echo "Error: Requiered fields is empty";
+            empty($_POST['auctionCategory']) || empty($_POST['itemColour']) ||
+            empty($_POST['itemCondition']) || empty($_POST['auctionStartPrice']) ||
+            empty($_POST['auctionEndDate']) ) {
+                // $errorMessage = "Please fill in all required fields.";
+                echo "Error: Requiered fields is empty <br> ";
         }
     }
 
@@ -42,9 +43,7 @@
 /* TODO #3: If everything looks good, make the appropriate call to insert
             data into the database. */
 
-    // *********************************
     // Retrieve data from the form
-    // *********************************
 
     // Access the value of the data from the $_POST array
     $name = $_POST['itemName'];
@@ -58,8 +57,12 @@
     $reserve_price = $_POST['auctionReservePrice'];
     $starting_price = $_POST['auctionStartPrice'];
 
+    // *********************************************************
+    // Note: Reserve price needs to be empty or else system will crash. 
+    // *********************************************************
+
     // Now $X contains the value entered in the 'X' field
-    echo "NameX: " . $name . "<br>";
+    echo "Name: " . $name . "<br>";
     echo "Description: " . $description . "<br>";
     echo "Category: " . $category . "<br>";
     echo "Colour: " . $colour . "<br>";
@@ -70,18 +73,18 @@
     echo "Reserve Price: " . $reserve_price . "<br>";
     echo "Starting Price: " . $starting_price . "<br>";
 
+    // *****************************************************
     // Perform validation or additional processing if needed
+    // *****************************************************
 
     // Insert data into the database
-    // $sql = "INSERT INTO users (username, password) VALUES ('$username', '$password')";
 
-    // *********************************
-
-    // Insert into Item table
     $item_query = "INSERT INTO Item (name, description, category, colour, `condition`)
     VALUES ('$name', '$description', '$category', '$colour', '$condition')";
 
     $item_result = db_query($connection, $item_query);
+
+    echo "Item added to DB <br>";
 
     if ($item_result) {
         // Get the last inserted item_id
@@ -92,27 +95,29 @@
             VALUES ('$item_id', '$start_time', '$end_time', '$auction_title', '$reserve_price', '$starting_price')";
 
         $auction_result = db_query($connection, $auction_query);
+        echo "Auction added to DB <br>";
 
         if ($auction_result) {
             echo "Item and Auction data inserted successfully!"; 
         } 
         else { 
             echo "Error inserting data into Auction table: " . mysqli_error($connection);
+            error_log("Auction Insert Error: " . mysqli_error($connection));
         }
 
         } 
     else {
             echo "Error inserting data into Item table: " . mysqli_error($connection);
+            error_log("Auction Insert Error: " . mysqli_error($connection));
         }
 
     // Close db connection
     db_disconnect($connection);
-
-    // *********************************
-
             
 
+//*******************************************************************************/
 // If all is successful, let user know.
+//*******************************************************************************/
 echo('<div class="text-center">Auction successfully created! <a href="FIXME">View your new listing.</a></div>');
 
 
