@@ -38,6 +38,6 @@ if (db_num_rows($result) === 1) {
 }
 
 // Free result set and close database connection
-mysqli_free_result($result);
+db_free_result($result);
 db_disconnect($connection);
 ?>
