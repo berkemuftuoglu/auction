@@ -1,5 +1,6 @@
 <?php include_once("header.php")?>
 <?php require("utilities.php")?>
+<?php require("database.php")?>
 
 <div class="container">
 
@@ -29,9 +30,18 @@
         <label for="cat" class="sr-only">Search within:</label>
         <select class="form-control" id="cat">
           <option selected value="all">All categories</option>
-          <option value="fill">Fill me in</option>
+          <?php
+            $connection = db_connect();
+            $categories = "SELECT DISTINCT category FROM item";
+            $result_categories = mysqli_query($connection, $categories);
+            while ($row = mysqli_fetch_array($result_categories)) {
+              echo '<option>' . $row[0] . '</option>';
+            }
+            mysqli_close($connection);
+          ?>
+          <!-- <option value="fill">Fill me in</option>
           <option value="with">with options</option>
-          <option value="populated">populated from a database?</option>
+          <option value="populated">populated from a database?</option> -->
         </select>
       </div>
     </div>
@@ -59,6 +69,7 @@
   // Retrieve these from the URL
   if (!isset($_GET['keyword'])) {
     // TODO: Define behavior if a keyword has not been specified.
+    $keyword = '';
   }
   else {
     $keyword = $_GET['keyword'];
@@ -66,6 +77,7 @@
 
   if (!isset($_GET['cat'])) {
     // TODO: Define behavior if a category has not been specified.
+    $category = 'all';
   }
   else {
     $category = $_GET['cat'];
@@ -73,6 +85,7 @@
   
   if (!isset($_GET['order_by'])) {
     // TODO: Define behavior if an order_by value has not been specified.
+    $ordering = 'pricelow';
   }
   else {
     $ordering = $_GET['order_by'];
@@ -125,6 +138,8 @@
   $end_date = new DateTime('2020-11-02T00:00:00');
   
   print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
+
+  
 ?>
 
 </ul>
