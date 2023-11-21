@@ -1,5 +1,5 @@
 -- Users Table
-INSERT INTO Users (email, password, type, first_name, last_name)
+INSERT INTO Users (email, password, role, first_name, last_name)
 VALUES 
     ('john.doe@example.com', 'password123', 0, 'John', 'Doe'),
     ('jane.smith@example.com', 'securepass', 1, 'Jane', 'Smith'),
@@ -7,7 +7,7 @@ VALUES
     ('sara.white@example.com', 'pass123', 0, 'Sara', 'White');
 
 -- Item Table
-INSERT INTO Item (name, description, category, colour, condition, photo)
+INSERT INTO Item (name, description, category, colour, `condition`, photo)
 VALUES 
     ('Smartphone', 'Brand new, in original packaging', 'Electronics', 'Black', 'Great', '/photos/smartphone.jpg'),
     ('Vintage Bookshelf', 'Antique wooden bookshelf', 'Home', 'Brown', 'Good', '/photos/bookshelf.jpg'),
