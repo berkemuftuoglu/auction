@@ -16,9 +16,9 @@ CREATE TABLE Item (
     item_id INT(11) AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description VARCHAR(511),
-    category ENUM("Electronics", "Fashion", "Home", "Books", 'Other') NOT NULL,
-    colour ENUM("Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "White", "Grey", "Black", "Brown", "Other") NOT NULL,
-    `condition` ENUM("Great", "Good", "Okay", "Poor") NOT NULL,
+    category ENUM('Electronics', 'Fashion', 'Home', 'Books', 'Other') NOT NULL,
+    colour ENUM('Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Purple', 'Pink', 'White', 'Grey', 'Black', 'Brown', 'Other'),
+    `condition` ENUM('Great', 'Good', 'Okay', 'Poor'),
     photo VARCHAR(255) -- filepath
 );
 
