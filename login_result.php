@@ -17,7 +17,7 @@ $password = $_POST['password'];
 
 // Prepare SQL query
 $query = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
-$result = mysqli_query($connection, $query);
+$result = db_query($connection, $query);
 confirm_result_set($result);
 $user = db_fetch_single($result);
 
