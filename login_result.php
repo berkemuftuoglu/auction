@@ -12,11 +12,11 @@ session_start();
 $connection = db_connect();
 
 // Extract $_POST variables
-$username = $_POST['username'];
+$email = $_POST['email'];
 $password = $_POST['password'];
 
 // Prepare SQL query
-$query = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
+$query = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
 $result = db_query($connection, $query);
 confirm_result_set($result);
 $user = db_fetch_single($result);
@@ -25,16 +25,16 @@ $user = db_fetch_single($result);
 if (db_num_rows($result) === 1) {
     // Login successful
     $_SESSION['logged_in'] = true;
-    $_SESSION['username'] = $username;
+    $_SESSION['email'] = $email;
 
     // TODO: Set 'account_type' or other session variables as needed
-    $_SESSION['account_type'] = $user['account_type'];
+    $_SESSION['account_type'] = $user['role'];
 
     echo('<div class="text-center">You are now logged in! You will be redirected shortly.</div>');
     header("refresh:5;url=index.php");
 } else {
     // Login failed
-    echo('<div class="text-center">Login failed. Invalid username or password.</div>');
+    echo('<div class="text-center">Login failed. Invalid email or password.</div>');
 }
 
 // Free result set and close database connection

@@ -11,8 +11,8 @@
     <div class="container">
         <form class="form-signin" action="login_result.php" method="post">
             <h2 class="form-signin-heading">Please sign in</h2>
-            <label for="inputUsername" class="sr-only">Username</label>
-            <input type="text" id="inputUsername" class="form-control" placeholder="Username" required autofocus name="username">
+            <label for="inputemail" class="sr-only">email</label>
+            <input type="text" id="inputemail" class="form-control" placeholder="email" required autofocus name="email">
             <label for="inputPa ssword" class="sr-only">Password</label>
             <input type="password" id="inputPassword" class="form-control" placeholder="Password" required name="password">
             <div class="checkbox">
