@@ -1,8 +1,12 @@
+CREATE DATABASE auction;
+
+USE auction;
+
 CREATE TABLE Users (
     user_id INT(11) AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    type BOOL, -- 0 for seller, 1 for buyer
+    role BOOL, -- 0 for seller, 1 for buyer
     first_name VARCHAR(255),
     last_name VARCHAR(255),
     UNIQUE(email)
@@ -12,9 +16,9 @@ CREATE TABLE Item (
     item_id INT(11) AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description VARCHAR(511),
-    category ENUM('Electronics', 'Fashion', 'Home', 'Books', 'Other') NOT NULL,
-    colour ENUM('Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Purple', 'Pink', 'White', 'Grey', 'Black', 'Brown', 'Other'),
-    condition ENUM('Great', 'Good', 'Okay', 'Poor'),
+    category ENUM("Electronics", "Fashion", "Home", "Books", 'Other') NOT NULL,
+    colour ENUM("Red", "Orange", "Yellow", "Green", "Blue", "Purple", "Pink", "White", "Grey", "Black", "Brown", "Other") NOT NULL,
+    `condition` ENUM("Great", "Good", "Okay", "Poor") NOT NULL,
     photo VARCHAR(255) -- filepath
 );
 
