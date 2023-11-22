@@ -9,7 +9,17 @@
   $connection = db_connect();
 
   if ($_POST['functionname'] == "add_to_watchlist") {
-    // TODO: Update database and return success/failure.
+    
+    $user_id = $_POST['user_id'];
+    $item_id = $_POST['item_id'];
+    $sql = "INSERT INTO watchlist (user_id, item_id) VALUES ('$user_id', '$item_id')";
+    $removeResult = mysqli_query($connection, $sql);
+
+    if (mysqli_affected_rows($connection) > 0) {
+      $res = "success";
+    } else {
+      $res = "failed";
+    }
 
     $res = "success";
   } else if ($_POST['functionname'] == "remove_from_watchlist") {
