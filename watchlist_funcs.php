@@ -20,8 +20,6 @@
     } else {
       $res = "failed";
     }
-
-    $res = "success";
   } else if ($_POST['functionname'] == "remove_from_watchlist") {
     $user_id = $_POST['user_id'];
     $item_id = $_POST['item_id'];

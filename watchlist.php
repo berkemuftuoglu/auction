@@ -7,14 +7,20 @@
         <?php
 
         $has_session = isset($_SESSION['logged_in']) && $_SESSION['logged_in'];
-        $user_id = $_SESSION['user_id'] ?? 2;
+        $user_id = $_SESSION['user_id'];
+
+        if (!$has_session) {
+            echo ('<div class="text-center">Please Login.</div>');
+            header("location: login.php");
+            exit;
+        }
 
 
 
         // Establish database connection
         $connection = db_connect();
 
-        // TODO: Use item_id to make a query to the database.
+        // TODO: Use user_id to make a query to the database.
         $watchlist_query = "SELECT
   i.item_id,
   i.name,
@@ -41,7 +47,6 @@ WHERE
 
         // Get item details
         while ($row = mysqli_fetch_assoc($watchlist_result)) {
-            //$item = db_fetch_multiple($watchlist_result);
             $item_id = $row['item_id'];
             $item_name = $row['name'];
             $item_description = $row['description'];

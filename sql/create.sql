@@ -25,12 +25,14 @@ CREATE TABLE Item (
 CREATE TABLE Auction (
     auction_id INT(11) AUTO_INCREMENT PRIMARY KEY,
     item_id INT(11),
+    user_id INT(11),
     start_time DATETIME NOT NULL,
     end_time DATETIME NOT NULL, -- if end time in earlier than current time, then the auction is over
     auction_title VARCHAR(255),
     reserve_price FLOAT(2),
     starting_price FLOAT(2),
     FOREIGN KEY (item_id) REFERENCES Item(item_id)
+    FOREIGN KEY (user_id) REFERENCES User(user_id)
 );
 
 CREATE TABLE Bids (
