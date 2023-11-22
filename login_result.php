@@ -27,6 +27,7 @@ if (db_num_rows($result) === 1) {
 
     // TODO: Set 'account_type' or other session variables as needed
     $_SESSION['account_type'] = $user['role'];
+    $_SESSION['user_id'] = $user['user_id'];
 
     echo('<div class="text-center">You are now logged in! You will be redirected shortly.</div>');
     header("refresh:2;url=browse.php");
