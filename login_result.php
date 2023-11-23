@@ -23,7 +23,6 @@ $user = db_fetch_single($result);
 
 if (db_num_rows($result) === 1) {
 
-    session_start();
     // Login successful
     $_SESSION['logged_in'] = true;
     $_SESSION['email'] = $email;
