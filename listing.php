@@ -5,6 +5,7 @@
 <?php
 
 $has_session = isset($_SESSION['logged_in']) && $_SESSION['logged_in'];
+$user_id = $_SESSION['user_id'];
 
 // Get info from the URL:
 $item_id = $_GET['item_id'] ?? null;
@@ -69,19 +70,16 @@ if ($bid_data) {
 }
 
 
-// Set watching
 $watching = false;
 if ($has_session) {
-  $watchlist_query = "SELECT 1
-                          FROM watchlist
-                          WHERE user_id =
-                            (SELECT user_id
-                             FROM users
-                             WHERE username = '$username') AND
-                            auction_id = '$item_id'";
-  $watchlist_result = db_query($connection, $watchlist_query);
-  $watching = db_num_rows($watchlist_result) > 0; // True if watching
+    $watchlist_query = "SELECT 1
+                        FROM Watchlist
+                        WHERE user_id = '$user_id' AND
+                              item_id = $item_id";
+    $watchlist_result = db_query($connection, $watchlist_query);
+    $watching = db_num_rows($watchlist_result) > 0; // True if watching
 }
+
 
 // Clean up the result sets
 db_free_result($item_result);
@@ -118,6 +116,12 @@ if ($now < $end_time) {
   <div class="row"> <!-- Row #1 with auction title + watch button -->
     <div class="col-sm-8"> <!-- Left col -->
       <h2 class="my-3"><?php echo ($title); ?></h2>
+      <p> <?php if($has_session) {
+        echo("you are logged in"); 
+      }else {
+        echo("you are not logged in");
+      }
+        ?></p>
     </div>
     <div class="col-sm-4 align-self-center"> <!-- Right col -->
       <?php

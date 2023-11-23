@@ -5,6 +5,7 @@ require_once('database.php');
 // Notify user of success/failure and redirect/give navigation options.
 
 // For now, I will just set session variables and redirect.
+session_start();
 
 // Create database connection
 $connection = db_connect();
