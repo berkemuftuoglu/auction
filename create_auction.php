@@ -14,7 +14,7 @@
 
 <!-- Create auction form -->
 <div style="max-width: 800px; margin: 10px auto">
-  <h2 class="my-3">Create new auction</h2>
+  <h2 class="my-3">Create New Auction</h2>
   <div class="card">
     <div class="card-body">
       <!-- Note: This form does not do any dynamic / client-side / 
@@ -59,7 +59,8 @@
           <label for="auctionDetails" class="col-sm-2 col-form-label text-right">Details</label>
           <div class="col-sm-10">
             <textarea class="form-control" id="auctionDetails" name="auctionDetails" rows="4"></textarea>
-            <small id="detailsHelp" class="form-text text-muted">Optional. Full details of the listing to help bidders decide if it's what they're looking for.</small>
+            <small id="detailsHelp" class="form-text text-muted">Optional.</small>
+            
           </div>
         </div>
 
@@ -78,8 +79,8 @@
               <option value="Books">Books</option>
               <option value="Other">Other</option>
             </select>
-            <small id="categoryHelp" class="form-text text-muted"><span class="text-danger">* Required.</span> Select a category for this item.</small>
-          </div>
+            <small id="AuctionCategoryHelp" class="form-text text-muted">Optional.</small>
+           </div>
         </div>
 
       <!--****************************************************************-->
@@ -98,7 +99,7 @@
                   }
                   ?>
               </select>
-              <small id="colourHelp" class="form-text text-muted"><span class="text-danger">* Required.</span> Select a colour for this item.</small>
+              <small id="colourHelp" class="form-text text-muted">Optional.</small>
           </div>
         </div>
       
@@ -116,7 +117,7 @@
                   <option value="Okay">Okay</option>
                   <option value="Poor">Poor</option>
               </select>
-              <small id="conditionHelp" class="form-text text-muted"><span class="text-danger">* Required.</span> Select a condition for this item.</small>
+              <small id="conditionHelp" class="form-text text-muted"><span class="text-danger">* Required.</span> State the condition of the item</small>
           </div>
       </div>
 
@@ -166,8 +167,12 @@
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary form-control">Create Auction</button>
+        <button type="submit" class="btn btn-primary form-control">Create Auction YYY</button>
       </form>
+
+    <!--****************************************************************--> 
+    <!--****************************************************************--> 
+
     </div>
   </div>
 </div>
