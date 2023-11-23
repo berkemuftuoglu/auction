@@ -2,6 +2,7 @@
 <?php require("utilities.php"); ?>
 <?php require("database.php"); ?>
 <?php
+$has_session = isset($_SESSION['logged_in']) && $_SESSION['logged_in'];
 if (!$has_session) {
   echo ('<div class="text-center">Please Login.</div>');
   header("location: login.php");
