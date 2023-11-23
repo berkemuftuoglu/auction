@@ -14,7 +14,7 @@
 
 <!-- Create auction form -->
 <div style="max-width: 800px; margin: 10px auto">
-  <h2 class="my-3">Create New Auction</h2>
+  <h2 class="my-3">Create new auction</h2>
   <div class="card">
     <div class="card-body">
       <!-- Note: This form does not do any dynamic / client-side / 
@@ -167,7 +167,7 @@
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary form-control">Create Auction YYY</button>
+        <button type="submit" class="btn btn-primary form-control">Create Auction</button>
       </form>
 
     <!--****************************************************************--> 

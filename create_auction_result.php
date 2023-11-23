@@ -19,7 +19,6 @@
             make sure it can be inserted into the database. If there is an
             issue, give some semi-helpful feedback to user. */
 
-
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         //*******************************************************************************/
@@ -53,10 +52,18 @@
                 $errorMessage .= "<br>- Start Price";
             }
         
-            echo $errorMessage;
+            echo '<div class="alert alert-danger mt-3" role="alert">' . $errorMessage . '</div>';
             db_disconnect($connection);
             exit();
         }
+
+        // Check if the end date is before today
+        $today = date("Y-m-d H:i:s");
+        if ($_POST['auctionEndDate'] < $today) {
+            echo '<div class="alert alert-danger mt-3" role="alert">Error: End date cannot be before today.</div>';
+            db_disconnect($connection);
+            exit();
+}
             
     }
 
@@ -84,16 +91,19 @@
     // *********************************************************
 
     // Now $X contains the value entered in the 'X' field
-    echo "Name: " . $name . "<br>";
-    echo "Description: " . $description . "<br>";
-    echo "Category: " . $category . "<br>";
-    echo "Colour: " . $colour . "<br>";
-    echo "Condition: " . $condition . "<br>";
-    echo "Start Time: " . $start_time . "<br>";
-    echo "End Time: " . $end_time . "<br>";
-    echo "Auction Title: " . $auction_title . "<br>";
-    echo "Reserve Price: " . $reserve_price . "<br>";
-    echo "Starting Price: " . $starting_price . "<br>";
+    echo '<div class="text-center mt-3">';
+    echo '<h3>Entered Values:</h3>';
+    echo "<p><strong>Name:</strong> " . $name . "</p>";
+    echo "<p><strong>Description:</strong> " . $description . "</p>";
+    echo "<p><strong>Category:</strong> " . $category . "</p>";
+    echo "<p><strong>Colour:</strong> " . $colour . "</p>";
+    echo "<p><strong>Condition:</strong> " . $condition . "</p>";
+    echo "<p><strong>Start Time:</strong> " . $start_time . "</p>";
+    echo "<p><strong>End Time:</strong> " . $end_time . "</p>";
+    echo "<p><strong>Auction Title:</strong> " . $auction_title . "</p>";
+    echo "<p><strong>Reserve Price:</strong> " . $reserve_price . "</p>";
+    echo "<p><strong>Starting Price:</strong> " . $starting_price . "</p>";
+    echo '</div>';
 
     // *****************************************************
     // Perform validation or additional processing if needed
@@ -108,7 +118,8 @@
 
     // Check item values
     if ($item_result) {
-        echo "Item added to DB <br>";
+        // echo "Item added to DB <br>";
+        echo '<div class="alert alert-success mt-3" role="alert"> Item data inserted successfully! </div>';
 
         // Get the last inserted item_id
         $item_id = mysqli_insert_id($connection);
@@ -119,10 +130,10 @@
 
         $auction_result = db_query($connection, $auction_query);
         if ($auction_result) {
-            echo "Auction data inserted successfully!"; 
+            echo '<div class="alert alert-success mt-3" role="alert"> Auction data inserted successfully! </div>';
         } 
         else { 
-            echo "Error inserting data into Auction table: " . mysqli_error($connection);
+            echo '<div class="alert alert-danger mt-3" role="alert"> Error: adding data to auction table </div>';
             db_disconnect($connection);    
             exit();
             // error_log("Auction Insert Error: " . mysqli_error($connection));
@@ -130,7 +141,7 @@
 
         } 
     else {
-            echo "Error inserting data into Item table: " . mysqli_error($connection);
+            echo '<div class="alert alert-danger mt-3" role="alert"> Error: adding data to item table </div>';
             db_disconnect($connection);
             exit();
         }
