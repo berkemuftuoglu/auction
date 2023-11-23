@@ -21,6 +21,8 @@ $user = db_fetch_single($result);
 
 
 if (db_num_rows($result) === 1) {
+
+    session_start();
     // Login successful
     $_SESSION['logged_in'] = true;
     $_SESSION['email'] = $email;
@@ -29,15 +31,14 @@ if (db_num_rows($result) === 1) {
     $_SESSION['account_type'] = $user['role'];
     $_SESSION['user_id'] = $user['user_id'];
 
-    echo('<div class="text-center">You are now logged in! You will be redirected shortly.</div>');
+    echo ('<div class="text-center">You are now logged in! You will be redirected shortly.</div>');
     header("refresh:2;url=browse.php");
 } else {
     // Login failed
-    echo('<div class="text-center">Login failed. Invalid email or password.</div>');
+    echo ('<div class="text-center">Login failed. Invalid email or password.</div>');
     header("refresh:2;url=login.php");
 }
 
 // Free result set and close database connection
 db_free_result($result);
 db_disconnect($connection);
-?>
