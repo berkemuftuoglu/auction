@@ -20,6 +20,13 @@ if (!$item_id) {
 // Establish database connection
 $connection = db_connect();
 
+//auction id
+$auction_query = "SELECT auction_id FROM Auction WHERE item_id = '$item_id'";
+$auction_result = db_query($connection, $auction_query);
+$auction_data = db_fetch_single($auction_result);
+$auction_id = $auction_data['auction_id'];
+
+
 // TODO: Use item_id to make a query to the database.
 $item_query = "SELECT auction.auction_title,
                         auction.start_time,
@@ -169,14 +176,16 @@ if ($now < $end_time) {
 
       <!-- Bidding form -->
       <form method="POST" action="place_bid.php">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text">£</span>
-          </div>
-          <input type="number" class="form-control" id="bid">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">£</span>
         </div>
-        <button type="submit" class="btn btn-primary form-control">Place bid</button>
+        <input type="number" class="form-control" id="bid" name="bid">
+      </div>
+      <input type="hidden" name="auction_id" value="<?php echo($auction_id) ?>">
+      <button type="submit" class="btn btn-primary form-control">Place bid</button>
       </form>
+
     <?php endif ?>
 
 
