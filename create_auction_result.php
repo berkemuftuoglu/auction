@@ -5,6 +5,31 @@
 
 <?php
 
+/* 
+
+CREATE TABLE Item (
+    item_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+**********************    name VARCHAR(255) NOT NULL,
+    description VARCHAR(511),
+**********************        category ENUM('Electronics', 'Fashion', 'Home', 'Books', 'Other') NOT NULL,
+    colour ENUM('Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Purple', 'Pink', 'White', 'Grey', 'Black', 'Brown', 'Other'),
+    `condition` ENUM('Great', 'Good', 'Okay', 'Poor'),
+    photo VARCHAR(255) -- filepath
+);
+
+CREATE TABLE Auction (
+    auction_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    item_id INT(11),
+**********************        start_time DATETIME NOT NULL,
+**********************        end_time DATETIME NOT NULL, -- if end time in earlier than current time, then the auction is over
+    auction_title VARCHAR(255),
+    reserve_price FLOAT(2),
+    starting_price FLOAT(2),
+    FOREIGN KEY (item_id) REFERENCES Item(item_id)
+);
+
+*/
+
 // This function takes the form data and adds the new auction to the database.
 
 /* TODO #1: Connect to MySQL database (perhaps by requiring a file that
@@ -30,11 +55,13 @@
         //******************************************************************************/
 
         if (empty($_POST['auctionTitle']) || empty($_POST['itemName']) ||
-            empty($_POST['auctionCategory']) || empty($_POST['itemColour']) ||
-            empty($_POST['itemCondition']) || empty($_POST['auctionStartPrice']) ||
-            empty($_POST['auctionEndDate']) ) {
-                // $errorMessage = "Please fill in all required fields.";
-                echo "Error: Requiered fields is empty <br> ";
+            empty($_POST['auctionCategory']) || empty($_POST['itemCondition']) ||
+            empty($_POST['auctionStartPrice']) || empty($_POST['auctionEndDate']) ||
+            empty($_POST['itemColour'])
+            
+            ) {
+                // $errorMessage = "Error: Requiered fields is empty <br> ";
+                // echo "Error: Requiered fields is empty <br> ";
         }
     }
 
@@ -102,13 +129,13 @@
         } 
         else { 
             echo "Error inserting data into Auction table: " . mysqli_error($connection);
-            error_log("Auction Insert Error: " . mysqli_error($connection));
+            // error_log("Auction Insert Error: " . mysqli_error($connection));
         }
 
         } 
     else {
             echo "Error inserting data into Item table: " . mysqli_error($connection);
-            error_log("Auction Insert Error: " . mysqli_error($connection));
+            // error_log("Auction Insert Error: " . mysqli_error($connection));
         }
 
     // Close db connection
