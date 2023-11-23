@@ -116,12 +116,6 @@ if ($now < $end_time) {
   <div class="row"> <!-- Row #1 with auction title + watch button -->
     <div class="col-sm-8"> <!-- Left col -->
       <h2 class="my-3"><?php echo ($title); ?></h2>
-      <p> <?php if($has_session) {
-        echo("you are logged in"); 
-      }else {
-        echo("you are not logged in");
-      }
-        ?></p>
     </div>
     <div class="col-sm-4 align-self-center"> <!-- Right col -->
       <?php
