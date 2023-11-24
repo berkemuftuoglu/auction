@@ -55,6 +55,8 @@
     echo "No current recommendations";
   };
 
+  // TODO: Loop through results and print them out as list items.
+  
   while($row = db_fetch_single($recommended_results)) {
     $item_id = $row["item_id"];
     $title = $row["auction_title"];
@@ -68,6 +70,5 @@
   db_free_result($recommended_results);
   db_disconnect($connection);
 
-  // TODO: Loop through results and print them out as list items.
   
 ?>
