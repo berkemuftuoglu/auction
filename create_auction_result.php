@@ -155,7 +155,7 @@
 //*******************************************************************************/
 // Check the success of the queries
 if ($item_result && $auction_result) {
-    echo '<div class="text-center">Auction successfully created! <a href="FIXME">View your new listing.</a></div>';
+    echo '<div class="text-center">Auction successfully created! <a href="listing.php">View your new listing.</a></div>';
 } else {
     echo '<div class="text-center">Error creating auction. Please try again.</div>';
 }
