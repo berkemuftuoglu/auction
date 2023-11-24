@@ -114,13 +114,16 @@
                              item.category
              FROM item
              INNER JOIN auction
-             ON item.item_id = auction.auction_id
+             ON item.item_id = auction.item_id
              INNER JOIN bids
              ON auction.auction_id = bids.auction_id
              WHERE item.name LIKE '%$keyword%'
              OR item.description LIKE '%$keyword%'
              OR auction.auction_title LIKE '%$keyword%'
-             GROUP BY item.item_id";
+             AND auction.item_id = item.item_id
+             GROUP BY item.item_id,
+                      auction.auction_title,
+                      auction.end_time";
   
   if($category != 'all') {
     $search .= " HAVING item.category = '$category'";
