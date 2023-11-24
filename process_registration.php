@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (mysqli_num_rows($emailCheckResult) > 0) {
         // Email already exists, show an error message
-        echo '<div class="text-center"> User already exists. <a href="data-toggle="modal" data-target="#loginModal">Login!</a>';
+        echo '<div class="text-center"> User already exists. <a href="login.php">Go to login page.</a></div>';
         db_disconnect($connection);
         exit();
     }
@@ -113,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Check the result of the database operation
     if ($result) {
-        echo '<div class="text-center"> Account successfully created!  <a href="data-toggle="modal" data-target="#loginModal">Login!</a';
+        echo '<div class="text-center"> Account successfully created! <a href="login.php">Go to login page.</a></div>';
     } else {
         echo '<div class="alert alert-danger mt-3" role="alert">Error: Registration failed.</div>';
     }
