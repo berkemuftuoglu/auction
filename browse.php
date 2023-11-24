@@ -114,7 +114,7 @@
                              item.category
              FROM item
              INNER JOIN auction
-             ON item.item_id = auction.auction_id
+             ON item.item_id = item.auction_id
              INNER JOIN bids
              ON auction.auction_id = bids.auction_id
              WHERE item.name LIKE '%$keyword%'
