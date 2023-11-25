@@ -5,6 +5,7 @@ require_once('database.php');
 // Notify user of success/failure and redirect/give navigation options.
 
 // For now, I will just set session variables and redirect.
+session_start();
 
 // Create database connection
 $connection = db_connect();
@@ -22,7 +23,6 @@ $user = db_fetch_single($result);
 
 if (db_num_rows($result) === 1) {
 
-    session_start();
     // Login successful
     $_SESSION['logged_in'] = true;
     $_SESSION['email'] = $email;
