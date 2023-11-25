@@ -1,6 +1,6 @@
-<?php include_once("header.php") ?>
-<?php require("utilities.php") ?>
-<?php require("database.php") ?>
+<?php include_once("header.php");
+require("utilities.php");
+require("database.php"); ?>
 
 <div class="container mt-5">
     <div class="row ">
