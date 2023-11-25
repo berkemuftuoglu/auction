@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/custom.css" rel="stylesheet" type="text/css">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet" type="text/css">
 </head>
+
 <body>
     <div class="container">
         <form class="form-signin" action="login_result.php" method="post">
@@ -24,4 +26,5 @@
         </form>
     </div>
 </body>
+
 </html>
