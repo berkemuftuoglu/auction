@@ -1,6 +1,9 @@
-<?php include_once("header.php"); ?>
-<?php require("utilities.php"); ?>
-<?php require("database.php"); ?>
+<?php 
+include_once("header.php");
+require("utilities.php");
+require("database.php");
+?>
+
 <?php
 $has_session = isset($_SESSION['logged_in']) && $_SESSION['logged_in'];
 if (!$has_session) {
@@ -36,7 +39,7 @@ if (!$has_session) {
 
     // Check if item exists
     if (db_num_rows($auction_result) == 0) {
-      echo "<div>Error: Item not found.</div>";
+      echo "<div>Item not found.</div>";
       db_disconnect($connection);
       exit;
     }
@@ -97,4 +100,4 @@ if (!$has_session) {
 
 
 
-<?php include_once("footer.php") ?>
+<?php include_once("footer.php"); ?>
