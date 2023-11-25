@@ -28,34 +28,18 @@
 
 <body>
 
-<!-- Navbars -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light mx-2">
-  <a class="navbar-brand" href="#">Site Name <!--CHANGEME!--></a>
-  <ul class="navbar-nav ml-auto">
-    <li class="nav-item">
-    
-<?php
-  // Displays either login or logout on the right, depending on user's
-  // current status (session).
-  if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
-    echo '<a class="nav-link" href="logout.php">Logout</a>';
-  }
-  else {
-    echo '<button type="button" class="btn nav-link" data-toggle="modal" data-target="#loginModal">Login</button>';
-  }
-?>
-
-    </li>
-  </ul>
-</nav>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <ul class="navbar-nav align-middle">
-	<li class="nav-item mx-1">
-      <a class="nav-link" href="browse.php">Browse</a>
-    </li>
-<?php
-  if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == '1') {
-  echo('
+  <!-- Navbars -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light mx-2">
+    <a class="navbar-brand" href="#">Site Name <!--CHANGEME!--></a>
+  </nav>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <ul class="navbar-nav align-middle">
+      <li class="nav-item mx-1">
+        <a class="nav-link" href="browse.php">Browse</a>
+      </li>
+      <?php
+      if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == '0') {
+        echo ('
 	<li class="nav-item mx-1">
       <a class="nav-link" href="mybids.php">My Bids</a>
     </li>
@@ -74,10 +58,28 @@
 	<li class="nav-item ml-3">
       <a class="nav-link btn border-light" href="create_auction.php">+ Create auction</a>
     </li>');
-  }
-?>
-  </ul>
-</nav>
+      }
+      ?>
+    </ul>
+
+    <ul class="navbar-nav ml-auto">
+      <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) { ?>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <img src="photos/user.png" alt="Profile Avatar" class="avatar-img">
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
+            <!-- <a class="dropdown-item" href="#">Profile</a> -->
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="logout.php">Logout</a>
+
+          </div>
+        </li>
+      <?php } else { ?>
+    </ul>
+    <button type="button" class="btn nav-link" data-toggle="modal" data-target="#loginModal">Login</button>
+  <?php } ?>
+  </nav>
 
 <!-- Login modal -->
 <div class="modal fade" id="loginModal">
@@ -106,5 +108,8 @@
       </div>
 
     </div>
-  </div>
-</div> <!-- End modal -->
+  </div> <!-- End modal -->
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
