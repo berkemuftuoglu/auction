@@ -31,8 +31,8 @@ CREATE TABLE Auction (
     auction_title VARCHAR(255),
     reserve_price FLOAT(2),
     starting_price FLOAT(2),
-    FOREIGN KEY (item_id) REFERENCES Item(item_id)
-    FOREIGN KEY (user_id) REFERENCES User(user_id)
+    FOREIGN KEY (item_id) REFERENCES Item(item_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
 CREATE TABLE Bids (
