@@ -65,15 +65,15 @@ session_start();
     <ul class="navbar-nav ml-auto">
       <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) { ?>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <img src="photos/user.png" alt="Profile Avatar" class="avatar-img">
           </a>
-          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
+          <ul class="dropdown-menu dropdown-menu-right">
             <!-- <a class="dropdown-item" href="#">Profile</a> -->
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="logout.php">Logout</a>
 
-          </div>
+          </ul>
         </li>
       <?php } else { ?>
     </ul>
@@ -110,4 +110,4 @@ session_start();
       </div>
     </div>
   </div>
-    <!-- End modal -->
+  <!-- End modal -->

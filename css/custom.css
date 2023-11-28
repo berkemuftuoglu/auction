@@ -42,3 +42,19 @@ body {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
+.card {
+    margin-bottom: 20px;
+  }
+  
+  .card-img {
+    border-radius: 0.5rem;
+  }
+  
+  .col-md-4 {
+    padding: 20px;
+  }
+  .card-img {
+    width: 230px;
+    height: 200px;
+  }
