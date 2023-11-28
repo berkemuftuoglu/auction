@@ -183,6 +183,7 @@ if ($now < $end_time) {
         <input type="number" class="form-control" id="bid" name="bid">
       </div>
       <input type="hidden" name="auction_id" value="<?php echo($auction_id) ?>">
+      <input type="hidden" name="current_price" value="<?php echo($current_price) ?>">
       <button type="submit" class="btn btn-primary form-control">Place bid</button>
       </form>
 

@@ -16,6 +16,7 @@ $connection = db_connect();
 $bid_amount = $_POST['bid'] ?? null;
 $auction_id = $_POST['auction_id'] ?? null; // Adjusted to auction_id as per your database schema
 $email = $_SESSION['email'];
+$max_bid = $_POST['current_price'] ?? null;
 
 // Fetch user ID from email
 $user_query = "SELECT user_id FROM Users WHERE email = '$email'";
@@ -35,9 +36,16 @@ $auction_data = db_fetch_single($auction_result);
 $end_time = new DateTime($auction_data['end_time']);
 $now = new DateTime();
 
+#Do not allow bid if lower then
+if($bid_amount < $max_bid){
+    echo('<div class="text-center">Bid must be higher than current bid. Redirecting back.</div>');
+    header("refresh:2;url=listing.php?item_id=" . $auction_id);
+    exit;
+}
+
 if ($now > $end_time) {
     echo('<div class="text-center">Auction has ended. Redirecting back.</div>');
-    header("refresh:2;url=listing.php?auction_id=" . urlencode($auction_id));
+    header("refresh:2;url=listing.php?item_id=" . $auction_id);
     exit;
 }
 
