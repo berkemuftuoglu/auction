@@ -2,9 +2,7 @@
 include_once("header.php");
 require("utilities.php");
 require("database.php");
-?>
 
-<?php
 $has_session = isset($_SESSION['logged_in']) && $_SESSION['logged_in'];
 if (!$has_session) {
   echo ('<div class="text-center">Please Login.</div>');
