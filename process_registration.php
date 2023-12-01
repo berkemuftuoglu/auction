@@ -100,13 +100,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Hash the password
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    // $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     // Set role based on account type
     $role = ($accountType == 'seller') ? 0 : 1;
 
     // INSERT query for the Users table
-    $query = "INSERT INTO Users (email, password, role, first_name, last_name) VALUES ('$email', '$hashedPassword', '$role', '$firstName', '$lastName')";   
+    $query = "INSERT INTO Users (email, password, role, first_name, last_name) VALUES ('$email', '$password', '$role', '$firstName', '$lastName')";   
 
     // Execute the query
     $result = db_query($connection, $query);
