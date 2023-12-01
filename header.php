@@ -30,7 +30,7 @@ session_start();
 
   <!-- Navbars -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light mx-2">
-    <a class="navbar-brand" href="#">Site Name <!--CHANGEME!--></a>
+    <a class="navbar-brand" href="dashboard.php">Site Name <!--CHANGEME!--></a>
   </nav>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <ul class="navbar-nav align-middle">
