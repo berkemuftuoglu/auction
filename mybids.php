@@ -27,6 +27,7 @@ if (!$has_session) {
     U.user_id,
     B.price,
     B.time_of_bid,
+    I.item_id,
     I.name AS item_name,
     I.description AS item_description,
     I.colour AS item_colour,
@@ -87,10 +88,10 @@ WHERE U.user_id = '$user_id'";
 
       <li class="list-group-item d-flex justify-content-between mt-3">
         <div class="d-flex align-items-center p-2 mr-5">
-          <img src="<?php echo $item_photo; ?>" alt="<?php echo $auction_title; ?>" class="img-fluid" style="max-width: 120px; max-height: 120px;">
+          <img src="<?php echo $item_photo; ?>" alt="<?php echo $item_name; ?>" class="img-fluid" style="max-width: 120px; max-height: 120px;">
           <div class="ml-3">
-            <h5><a href="listing.php?item_id=<?php echo $item_id; ?>">
-                <?php echo $auction_title; ?>
+            <h5><a href="listing.php?item_id=<?php echo urlencode($row[item_id]); ?>">
+                <?php echo $item_name; ?>
               </a> </h5>
             <?php echo $desc_shortened; ?>
           </div>
@@ -106,7 +107,7 @@ WHERE U.user_id = '$user_id'";
             <?php
             echo "<br />";
             if ($bid_price == $highest_bid) {
-              echo "<span class='badge badge-pill badge-success'>highest bid</span>";
+              echo "<span class='badge badge-pill badge-success'>Highest bid</span>";
             } else {
               echo "<span class='badge badge-pill badge-danger'>Not the highest bid</span>
                   <a href='place_bid.php' class='btn btn-primary btn-sm mt-2'>Place a Bid</a>
@@ -121,6 +122,8 @@ WHERE U.user_id = '$user_id'";
 
     <?php
     }
+    db_free_result($auction_result);
+    db_disconnect($connection);
     ?>
 
   </ul>
