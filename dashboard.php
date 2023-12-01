@@ -63,7 +63,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 ?>
 
 <div class="container mt-5">
-    <h2 class="my-3">Hello, <?php echo $user['first_name']; ?></h2>
+    <h2 class="my-3">Welcome, <?php echo $user['first_name']; ?>!</h2>
+    <p>What would you like to do today?</p>
+    <?php
+        if ($user['role'] == 0) {
+            echo '<h3>Selling Activites</h3>';
+            echo '<li><a href="/browse.php">Browse Listings</a></li>';
+            echo '<li><a href="/mylistings.php">See My Current Listings</a></li>';
+            echo '<li><a href="/create_auction.php">Create a New Auction</a></li>';
+            echo '<br>';
+        } elseif ($user['role'] == 1) {
+            echo '<h3>Buying Activites</h3>';
+            echo '<li><a href="/browse.php">Browse Listings</a></li>';
+            echo '<li><a href="/mybids.php">See My Current Bids</a></li>';
+            echo '<li><a href="/watchlist.php">Check Out My Watchlist</a></li>';
+            echo '<li><a href="/recommendations.php">Look At Recommended Items</a></li>';
+            echo '<br>';
+        };
+    ?> 
+    <h3>Update Profile Information</h3>
     <table>
         <tr>
             <th>First Name</th>
