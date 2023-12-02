@@ -67,10 +67,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     <p>What would you like to do today?</p>
     <?php
         if ($user['role'] == 0) {
+
+            $connection = db_connect();
+            $stmt = "SELECT total_ratings, average_rating FROM users WHERE user_id = '$user_id'";
+            $rating_call = db_query($connection, $stmt);
+            confirm_result_set($rating_call);
+
+            $rating = db_fetch_single($rating_call);
+
+            $totalRatings = $rating["total_ratings"];
+            $userRating = $rating["average_rating"];
+
+            db_free_result($rating_call);
+            db_disconnect($connection);
+
             echo '<h3>Selling Activites</h3>';
             echo '<li><a href="/browse.php">Browse Listings</a></li>';
             echo '<li><a href="/mylistings.php">See My Current Listings</a></li>';
             echo '<li><a href="/create_auction.php">Create a New Auction</a></li>';
+            echo '<br>';
+            echo '<h3>Your Current Rating is </h3>';
+            if ($totalRatings == 0) {
+                echo "You haven't been rated yet";
+            } else {
+                echo $userRating;
+            }
+            echo '<br>';
             echo '<br>';
         } elseif ($user['role'] == 1) {
             echo '<h3>Buying Activites</h3>';
@@ -78,6 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             echo '<li><a href="/mybids.php">See My Current Bids</a></li>';
             echo '<li><a href="/watchlist.php">Check Out My Watchlist</a></li>';
             echo '<li><a href="/recommendations.php">Look At Recommended Items</a></li>';
+            echo '<li><a href="/recommendations.php">Review Won Auctions and Rate Sellers</a></li>';
             echo '<br>';
         };
     ?> 
