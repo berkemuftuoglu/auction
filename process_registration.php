@@ -1,5 +1,6 @@
 <?php include_once("header.php")?>
 <?php include_once("database.php") ?>
+<?php require_once('utilities.php'); ?>
 
 <div class="container my-5">
 
@@ -114,6 +115,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check the result of the database operation
     if ($result) {
         echo '<div class="text-center"> Account successfully created! <a href="login.php">Go to login page.</a></div>';
+
+        // ********************* Send out email **************************
+
+        //send email to user
+        $recipient = $email;
+        $subject = "Account Created!";
+        $content = "<body> Welcome to Auction site! </body></br>";
+        sendmail($recipient, $subject, $content);
+
+        // ***************************************************************
+
+
     } else {
         echo '<div class="alert alert-danger mt-3" role="alert">Error: Registration failed.</div>';
     }
