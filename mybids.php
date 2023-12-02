@@ -91,7 +91,7 @@ if (!$has_session) {
         <div class="d-flex align-items-center p-2 mr-5">
           <img src="<?php echo $item_photo; ?>" alt="<?php echo $auction_title; ?>" class="img-fluid" style="max-width: 120px; max-height: 120px;">
           <div class="ml-3">
-            <h5><a href="listing.php?item_id=<?php echo urlencode($row[item_id]); ?>">
+            <h5><a href="listing.php?item_id=<?php echo urlencode($row['item_id']); ?>">
                 <?php echo $auction_title; ?>
               </a> </h5>
             <?php echo $desc_shortened; ?>
