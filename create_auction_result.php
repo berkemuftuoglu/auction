@@ -63,8 +63,8 @@
             echo '<div class="alert alert-danger mt-3" role="alert">Error: End date cannot be before today.</div>';
             db_disconnect($connection);
             exit();
-}
-            
+        }
+
     }
 
 
@@ -85,6 +85,8 @@
     $auction_title = $_POST['auctionTitle'];
     $reserve_price = !empty($_POST['auctionReservePrice']) ? $_POST['auctionReservePrice'] : 0; // Check if empty
     $starting_price = $_POST['auctionStartPrice'];
+
+    $user_id = $_SESSION['user_id'];
 
     // *********************************************************
     // Note: Reserve price needs to be empty or else system will crash. 
@@ -125,8 +127,8 @@
         $item_id = mysqli_insert_id($connection);
 
         // Insert into Auction table
-        $auction_query = "INSERT INTO Auction (item_id, start_time, end_time, auction_title, reserve_price, starting_price)
-            VALUES ('$item_id', '$start_time', '$end_time', '$auction_title', '$reserve_price', '$starting_price')";
+        $auction_query = "INSERT INTO Auction (user_id, item_id, start_time, end_time, auction_title, reserve_price, starting_price)
+            VALUES ('$user_id', '$item_id', '$start_time', '$end_time', '$auction_title', '$reserve_price', '$starting_price')";
 
         $auction_result = db_query($connection, $auction_query);
         if ($auction_result) {
@@ -155,7 +157,14 @@
 //*******************************************************************************/
 // Check the success of the queries
 if ($item_result && $auction_result) {
-    echo '<div class="text-center">Auction successfully created! <a href="listing.php">View your new listing.</a></div>';
+
+    // Create the listing page link
+    $listingLink = "listing.php?item_id=$item_id";
+
+    // Display the success message with the link
+    echo '<div class="text-center">Auction successfully created! <a href="' . $listingLink . '">View your new listing.</a></div>';
+    
+
 } else {
     echo '<div class="text-center">Error creating auction. Please try again.</div>';
 }

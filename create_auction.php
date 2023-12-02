@@ -25,7 +25,7 @@
       extremely low-priority / only done after all database functions are
       complete. -->
 
-      <form method="post" action="create_auction_result.php">
+      <form method="post" action="create_auction_result.php" enctype="multipart/form-data">
 
       <!--****************************************************************-->
       <!--********************** Auction Title ***************************-->
@@ -167,11 +167,25 @@
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary form-control">Create Auction</button>
+
+      <!--****************************************************************-->
+      <!--********************** Photo Attach ****************************-->
+      <!--****************************************************************--> 
+
+      <div class="form-group row">
+          <label for="uploadImage" class="col-sm-2 col-form-label text-right">Upload Image</label>
+          <div class="col-sm-10">
+            <input type="file" name="image" id="uploadImage">
+            <small id="uploadImage" class="form-text text-muted"> <span class="text-danger">* Required.</span> Allowed file types: jpg, png, jpeg</small>
+          </div>
+      </div>
+
+      <!--****************************************************************--> 
+      <!--****************************************************************--> 
+
+        <button type="submit" class="btn btn-primary form-control">sCreate Auction</button>
       </form>
 
-    <!--****************************************************************--> 
-    <!--****************************************************************--> 
 
     </div>
   </div>
