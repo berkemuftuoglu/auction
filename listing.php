@@ -79,12 +79,12 @@ if ($bid_data) {
 
 $watching = false;
 if ($has_session) {
-    $watchlist_query = "SELECT 1
+  $watchlist_query = "SELECT 1
                         FROM Watchlist
                         WHERE user_id = '$user_id' AND
                               item_id = $item_id";
-    $watchlist_result = db_query($connection, $watchlist_query);
-    $watching = db_num_rows($watchlist_result) > 0; // True if watching
+  $watchlist_result = db_query($connection, $watchlist_query);
+  $watching = db_num_rows($watchlist_result) > 0; // True if watching
 }
 
 
@@ -131,11 +131,11 @@ if ($now < $end_time) {
       if ($now < $end_time) :
       ?>
         <div id="watch_nowatch" <?php if ($has_session && $watching) echo ('style="display: none"'); ?>>
-          <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addToWatchlist()">+ Add to watchlist</button>
+          <button type="button" class="btn btn-outline-secondary btn-sm" data-userid="<?php echo $user_id; ?>" data-itemid="<?php echo $item_id; ?>" onclick="addToWatchlist()">+ Add to watchlist</button>
         </div>
         <div id="watch_watching" <?php if (!$has_session || !$watching) echo ('style="display: none"'); ?>>
           <button type="button" class="btn btn-success btn-sm" disabled>Watching</button>
-          <button type="button" class="btn btn-danger btn-sm" onclick="removeFromWatchlist()">Remove watch</button>
+          <button type="button" class="btn btn-danger btn-sm" data-userid="<?php echo $user_id; ?>" data-itemid="<?php echo $item_id; ?>" onclick="removeFromWatchlist()">Remove watch</button>
         </div>
       <?php endif /* Print nothing otherwise */ ?>
     </div>
@@ -186,7 +186,19 @@ if ($now < $end_time) {
       <button type="submit" class="btn btn-primary form-control">Place bid</button>
       </form>
 
-    <?php endif ?>
+        <!-- Bidding form -->
+        <form method="POST" action="place_bid.php">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">£</span>
+            </div>
+            <input type="number" class="form-control" id="bid" name="bid">
+          </div>
+          <input type="hidden" name="auction_id" value="<?php echo $auction_id ?>">
+          <input type="hidden" name="current_price" value="<?php echo $current_price ?>">
+          <button type="submit" class="btn btn-primary form-control">Place bid</button>
+        </form>
+      <?php endif ?>
 
 
     </div> <!-- End of right col with bidding info -->
@@ -206,11 +218,15 @@ if ($now < $end_time) {
 
       // This performs an asynchronous call to a PHP function using POST method.
       // Sends item ID as an argument to that function.
-      $.ajax('watchlist_funcs.php', {
+      var userId = event.target.getAttribute('data-userid');
+      var itemId = event.target.getAttribute('data-itemid');
+      $.ajax({
+        url: 'watchlist_funcs.php',
         type: "POST",
         data: {
           functionname: 'add_to_watchlist',
-          arguments: [<?php echo ($item_id); ?>]
+          user_id: userId,
+          item_id: itemId
         },
 
         success: function(obj, textstatus) {
@@ -238,11 +254,15 @@ if ($now < $end_time) {
     function removeFromWatchlist(button) {
       // This performs an asynchronous call to a PHP function using POST method.
       // Sends item ID as an argument to that function.
-      $.ajax('watchlist_funcs.php', {
+      var userId = event.target.getAttribute('data-userid');
+      var itemId = event.target.getAttribute('data-itemid');
+      $.ajax({
+        url: 'watchlist_funcs.php',
         type: "POST",
         data: {
           functionname: 'remove_from_watchlist',
-          arguments: [<?php echo ($item_id); ?>]
+          user_id: userId,
+          item_id: itemId
         },
 
         success: function(obj, textstatus) {
