@@ -1,5 +1,7 @@
 <?php
 require_once('database.php');
+require_once('utilities.php');
+
 
 session_start();
 
@@ -55,6 +57,18 @@ $insert_bid_result = db_query($connection, $insert_bid_query);
 
 if ($insert_bid_result) {
     echo('<div class="text-center">Bid placed successfully. Redirecting back.</div>');
+
+    // ********************* Send out email **************************
+
+    //send email to bidder
+    $recipient = $email;
+    $subject = "Bid placed!";
+    $content = "<body>Your bid has been placed successfully! </body></br>";
+    sendmail($recipient, $subject, $content);
+
+    // **************************************************************
+
+
 } else {
     echo('<div class="text-center">Failed to place bid. Redirecting back.</div>');
 }

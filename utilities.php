@@ -1,5 +1,43 @@
 <?php
 
+require 'includes/PHPMailer.php';
+require 'includes/SMTP.php';
+require 'includes/Exception.php';
+
+//Define name spaces
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+//mail function , needs recipient email address, subject, and html content of the email
+function sendmail($recipient, $subject, $content){
+      $mail = new PHPMailer();
+      $mail->isSMTP();
+      $mail->Host = "smtp.gmail.com";
+      $mail->SMTPAuth = true;
+      $mail->SMTPSecure = "tls";
+      $mail->Port = "587";
+      $mail->Username = "noreply4auction@gmail.com";
+      $mail->Password = "yxwr zyem jaxc wbfc";
+      $mail->Subject = $subject;
+      $mail->setFrom('noreply4auction@gmail.com');
+      $mail->isHTML(true);
+
+      //Email body
+      $mail->Body = $content;
+
+      //Add recipient
+      $mail->addAddress($recipient);
+      if ( $mail->send() ) {
+        echo "Email Sent!";
+        }
+      else{
+        echo "Email Error: {$mail->ErrorInfo}";
+      }
+          
+      $mail->smtpClose();
+}
+
 // display_time_remaining:
 // Helper function to help figure out what time to display
 function display_time_remaining($interval) {
