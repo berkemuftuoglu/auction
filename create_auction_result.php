@@ -27,7 +27,7 @@
 
         if (empty($_POST['auctionTitle']) || empty($_POST['itemName']) || 
             empty($_POST['auctionEndDate']) || empty($_POST['itemCondition']) ||
-            empty($_POST['auctionStartPrice']) ) 
+            empty($_POST['auctionStartPrice']) || empty($_FILES["image"]["name"]) ) 
         
         {
             $errorMessage = "Error: Required fields are empty. Please fill in the following:";
@@ -51,6 +51,11 @@
             if (empty($_POST['auctionStartPrice'])) {
                 $errorMessage .= "<br>- Start Price";
             }
+
+            if (empty($_FILES["image"]["name"])) {
+                $errorMessage .= "<br>- image name";
+            }
+    
         
             echo '<div class="alert alert-danger mt-3" role="alert">' . $errorMessage . '</div>';
             db_disconnect($connection);
@@ -64,6 +69,55 @@
             db_disconnect($connection);
             exit();
         }
+
+        // ************************ check photo  ************************ 
+
+        // File upload handling
+        echo $_FILES["image"]["name"];
+
+        $targetDirectory = "photos/";
+        $targetFile = $targetDirectory . basename($_FILES["image"]["name"]);
+        $uploadOk = 1;
+        $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
+        // Check if the file is an actual image
+        $check = getimagesize($_FILES["image"]["tmp_name"]);
+        if ($check === false) {
+            echo '<div class="alert alert-danger mt-3" role="alert">Error: The uploaded file is not an image.</div>';
+            $uploadOk = 0;
+        }
+
+        // Check file size (adjust the limit as needed)
+        if ($_FILES["image"]["size"] > 500000) {
+            echo '<div class="alert alert-danger mt-3" role="alert">Error: The uploaded file is too large.</div>';
+            $uploadOk = 0;
+        }
+
+        // Allow certain file formats (adjust as needed)
+        $allowedExtensions = ['jpg', 'jpeg', 'png'];
+        if (!in_array($imageFileType, $allowedExtensions)) {
+            echo '<div class="alert alert-danger mt-3" role="alert">Error: Invalid file format. Allowed formats: jpg, jpeg, png.</div>';
+            $uploadOk = 0;
+        }
+
+        // Check if $uploadOk is set to 0 by an error
+        if ($uploadOk == 0) {
+            echo '<div class="alert alert-danger mt-3" role="alert">Error: File not uploaded.</div>';
+            db_disconnect($connection);
+            exit();
+        } else {
+            // Move the uploaded file to the target directory
+            if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
+                echo '<div class="alert alert-success mt-3" role="alert">File uploaded successfully!</div>';
+            } else {
+                echo '<div class="alert alert-danger mt-3" role="alert">Error uploading file.</div>';
+                db_disconnect($connection);
+                exit();
+            }
+        }
+        
+
+        // **************************************************************
 
     }
 
@@ -111,36 +165,39 @@
     // Perform validation or additional processing if needed
     // *****************************************************
 
+    $filePath = "/" . "photos/" . basename($_FILES["image"]["name"]);
+    echo 'File path = ' . $filePath;
+
     // Insert data into the database
-    $item_query = "INSERT INTO Item (name, description, category, colour, `condition`)
-    VALUES ('$name', '$description', '$category', '$colour', '$condition')";
+    // ********************** Add photo to auction_query  **********************
+    $item_query = "INSERT INTO Item (name, description, category, colour, `condition`, photo)
+        VALUES ('$name', '$description', '$category', '$colour', '$condition', '$filePath')";
 
     // Execute the item query
     $item_result = db_query($connection, $item_query);
 
     // Check item values
     if ($item_result) {
-        // echo "Item added to DB <br>";
-        echo '<div class="alert alert-success mt-3" role="alert"> Item data inserted successfully! </div>';
+            // echo "Item added to DB <br>";
+            echo '<div class="alert alert-success mt-3" role="alert"> Item data inserted successfully! </div>';
 
-        // Get the last inserted item_id
-        $item_id = mysqli_insert_id($connection);
+            // Get the last inserted item_id
+            $item_id = mysqli_insert_id($connection);
+ 
+            // Insert into Auction table
+            $auction_query = "INSERT INTO Auction (user_id, item_id, start_time, end_time, auction_title, reserve_price, starting_price)
+                VALUES ('$user_id', '$item_id', '$start_time', '$end_time', '$auction_title', '$reserve_price', '$starting_price')";
 
-        // Insert into Auction table
-        $auction_query = "INSERT INTO Auction (user_id, item_id, start_time, end_time, auction_title, reserve_price, starting_price)
-            VALUES ('$user_id', '$item_id', '$start_time', '$end_time', '$auction_title', '$reserve_price', '$starting_price')";
-
-        $auction_result = db_query($connection, $auction_query);
-        if ($auction_result) {
-            echo '<div class="alert alert-success mt-3" role="alert"> Auction data inserted successfully! </div>';
-        } 
-        else { 
-            echo '<div class="alert alert-danger mt-3" role="alert"> Error: adding data to auction table </div>';
-            db_disconnect($connection);    
-            exit();
-            // error_log("Auction Insert Error: " . mysqli_error($connection));
-        }
-
+            $auction_result = db_query($connection, $auction_query);
+            if ($auction_result) {
+                echo '<div class="alert alert-success mt-3" role="alert"> Auction data inserted successfully! </div>';
+            } 
+            else { 
+                echo '<div class="alert alert-danger mt-3" role="alert"> Error: adding data to auction table </div>';
+                db_disconnect($connection);    
+                exit();
+                // error_log("Auction Insert Error: " . mysqli_error($connection));
+            }
         } 
     else {
             echo '<div class="alert alert-danger mt-3" role="alert"> Error: adding data to item table </div>';
