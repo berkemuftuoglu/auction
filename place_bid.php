@@ -61,7 +61,7 @@ if ($insert_bid_result) {
     // ********************* Send out email **************************
 
     //send email to bidder
-    $recipient = "halahawashin18@gmail.com";
+    $recipient = $email;
     $subject = "Bid placed!";
     $content = "<body>Your bid has been placed successfully! </body></br>";
     sendmail($recipient, $subject, $content);
