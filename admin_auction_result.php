@@ -6,24 +6,24 @@
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $connection = db_connect();
-    $auction_id = mysqli_real_escape_string($connection, $_POST['auction_id']);
+    $auction_id =  $_POST['auction_id'];
 
     // Determine the action: update or delete
     $action = $_POST['action'];
 
     if ($action == 'update') {
         // Sanitize and prepare data for updating
-        $auction_title = mysqli_real_escape_string($connection, $_POST['auction_title']);
-        $end_time = mysqli_real_escape_string($connection, $_POST['end_time']);
+        $auction_title = $_POST['auction_title'];
+        $end_time = $_POST['end_time'];
 
         // Update query
         $query = "UPDATE Auction SET auction_title = '$auction_title', end_time = '$end_time' WHERE auction_id = $auction_id";
 
-        if (mysqli_query($connection, $query)) {
+        if (db_query($connection, $query)) {
             echo "<div>Record updated successfully.</div>";
             header("Refresh: 2; URL=admin_auctions.php");
         } else {
-            echo "Error updating record: " . mysqli_error($connection);
+            echo "Error updating record";
         }
     }
 
@@ -33,11 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Delete query
         $query = "DELETE FROM Auction WHERE auction_id = $auction_id";
 
-        if (mysqli_query($connection, $query)) {
+        if (db_query($connection, $query)) {
             echo "<div>Auction deleted successfully.</div>";
             header("Refresh: 2; URL=admin_auctions.php");
         } else {
-            echo "Error deleting record: " . mysqli_error($connection);
+            echo "Error deleting record:";
         }
     }
 

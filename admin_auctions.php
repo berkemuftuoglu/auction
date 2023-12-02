@@ -10,7 +10,7 @@ $connection = db_connect();
 $query = "SELECT Auction.auction_id, Auction.auction_title, Item.name, Auction.end_time
           FROM Auction
           INNER JOIN Item ON Auction.item_id = Item.item_id";
-$result = mysqli_query($connection, $query);
+$result = db_query($connection, $query);
 ?>
 
 <!doctype html>
@@ -33,12 +33,12 @@ $result = mysqli_query($connection, $query);
         </tr>
       </thead>
       <tbody>
-        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+        <?php while ($row = db_fetch_single($result)) { ?>
           <tr>
-            <td><?php echo htmlspecialchars($row['auction_id']); ?></td>
-            <td><?php echo htmlspecialchars($row['auction_title']); ?></td>
-            <td><?php echo htmlspecialchars($row['name']); ?></td>
-            <td><?php echo htmlspecialchars($row['end_time']); ?></td>
+            <td><?php echo $row['auction_id']; ?></td>
+            <td><?php echo $row['auction_title']; ?></td>
+            <td><?php echo $row['name']; ?></td>
+            <td><?php echo $row['end_time']; ?></td>
             <td>
               <a href="admin_edit_auction.php?auction_id=<?php echo $row['auction_id']; ?>" class="btn btn-primary">Edit</a>
             </td>

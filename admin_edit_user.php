@@ -7,12 +7,12 @@
 if (isset($_GET['user_id'])) {
     $connection = db_connect();
 
-    $user_id = mysqli_real_escape_string($connection, $_GET['user_id']);
+    $user_id = $_GET['user_id'];
 
     // Query to fetch user details
     $query = "SELECT user_id, email, first_name, last_name FROM Users WHERE user_id = '$user_id'";
-    $result = mysqli_query($connection, $query);
-    $user = mysqli_fetch_assoc($result);
+    $result = db_query($connection, $query);
+    $user = db_fetch_single($result);
 
     if (!$user) {
         echo "User not found.";
@@ -36,21 +36,21 @@ if (isset($_GET['user_id'])) {
   <div class="container mt-4">
     <h1>Edit User</h1>
     <form action="admin_user_result.php" method="post">
-      <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($user['user_id']); ?>">
+      <input type="hidden" name="user_id" value="<?php echo $user['user_id']; ?>">
 
       <div class="form-group">
         <label for="email">Email:</label>
-        <input type="email" class="form-control" name="email" id="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
+        <input type="email" class="form-control" name="email" id="email" value="<?php echo $user['email']; ?>" required>
       </div>
 
       <div class="form-group">
         <label for="first_name">First Name:</label>
-        <input type="text" class="form-control" name="first_name" id="first_name" value="<?php echo htmlspecialchars($user['first_name']); ?>" required>
+        <input type="text" class="form-control" name="first_name" id="first_name" value="<?php echo $user['first_name']; ?>" required>
       </div>
 
       <div class="form-group">
         <label for="last_name">Last Name:</label>
-        <input type="text" class="form-control" name="last_name" id="last_name" value="<?php echo htmlspecialchars($user['last_name']); ?>" required>
+        <input type="text" class="form-control" name="last_name" id="last_name" value="<?php echo $user['last_name']; ?>" required>
       </div>
 
       <button type="submit" name="action" value="update" class="btn btn-primary">Update User</button>

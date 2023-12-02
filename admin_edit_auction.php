@@ -7,7 +7,7 @@
 if (isset($_GET['auction_id'])) {
     $connection = db_connect();
 
-    $auction_id = mysqli_real_escape_string($connection, $_GET['auction_id']);
+    $auction_id = $_GET['auction_id'];
 
     // Query to fetch auction details
     $query = "SELECT Auction.auction_id, Auction.auction_title, Auction.end_time, Item.name AS item_name 
@@ -15,8 +15,8 @@ if (isset($_GET['auction_id'])) {
               INNER JOIN Item ON Auction.item_id = Item.item_id
               WHERE Auction.auction_id = '$auction_id'";
 
-    $result = mysqli_query($connection, $query);
-    $auction = mysqli_fetch_assoc($result);
+    $result = db_query($connection, $query);
+    $auction = db_fetch_single($result);
 
     if (!$auction) {
         echo "Auction not found.";
@@ -40,21 +40,21 @@ if (isset($_GET['auction_id'])) {
   <div class="container mt-4">
     <h1>Edit Auction</h1>
     <form action="admin_auction_result.php" method="post">
-      <input type="hidden" name="auction_id" value="<?php echo htmlspecialchars($auction['auction_id']); ?>">
+      <input type="hidden" name="auction_id" value="<?php echo $auction['auction_id']; ?>">
 
       <div class="form-group">
         <label for="auction_title">Auction Title:</label>
-        <input type="text" class="form-control" name="auction_title" id="auction_title" value="<?php echo htmlspecialchars($auction['auction_title']); ?>" required>
+        <input type="text" class="form-control" name="auction_title" id="auction_title" value="<?php echo $auction['auction_title']; ?>" required>
       </div>
 
       <div class="form-group">
         <label for="item_name">Item Name:</label>
-        <input type="text" class="form-control" name="item_name" id="item_name" value="<?php echo htmlspecialchars($auction['item_name']); ?>" required>
+        <input type="text" class="form-control" name="item_name" id="item_name" value="<?php echo $auction['item_name']; ?>" required>
       </div>
 
       <div class="form-group">
         <label for="end_time">End Time:</label>
-        <input type="datetime-local" class="form-control" name="end_time" id="end_time" value="<?php echo htmlspecialchars($auction['end_time']); ?>" required>
+        <input type="datetime-local" class="form-control" name="end_time" id="end_time" value="<?php echo $auction['end_time']; ?>" required>
       </div>
 
       <button type="submit" name="action" value="update" class="btn btn-primary">Update Auction</button>

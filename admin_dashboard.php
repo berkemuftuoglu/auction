@@ -12,17 +12,17 @@ $connection = db_connect();
 
 // Query to count the number of users
 $user_count_query = "SELECT COUNT(*) FROM Users";
-$user_count_result = mysqli_query($connection, $user_count_query);
-$user_count = mysqli_fetch_array($user_count_result)[0];
+$user_count_result = db_query($connection, $user_count_query);
+$user_count = db_fetch_array($user_count_result)[0];
 
 // Query to count the number of auctions
 $auction_count_query = "SELECT COUNT(*) FROM Auction";
-$auction_count_result = mysqli_query($connection, $auction_count_query);
-$auction_count = mysqli_fetch_array($auction_count_result)[0];
+$auction_count_result = db_query($connection, $auction_count_query);
+$auction_count = db_fetch_array($auction_count_result)[0];
 
 // Query to get top categories (example of creative element)
 $top_categories_query = "SELECT category, COUNT(*) as count FROM Item GROUP BY category ORDER BY count DESC LIMIT 3";
-$top_categories_result = mysqli_query($connection, $top_categories_query);
+$top_categories_result = db_query($connection, $top_categories_query);
 ?>
 
 <!doctype html>
@@ -39,8 +39,8 @@ $top_categories_result = mysqli_query($connection, $top_categories_query);
 
     <h3>Top Auction Categories</h3>
     <ul>
-      <?php while ($row = mysqli_fetch_assoc($top_categories_result)) {
-        echo "<li>" . htmlspecialchars($row['category']) . " (" . $row['count'] . ")</li>";
+      <?php while ($row = db_fetch_single($top_categories_result)) {
+        echo "<li>" . $row['category'] . " (" . $row['count'] . ")</li>";
       } ?>
     </ul>
   </div>
