@@ -6,6 +6,7 @@
 
 $has_session = isset($_SESSION['logged_in']) && $_SESSION['logged_in'];
 $user_id = $_SESSION['user_id'];
+$account_type = $_SESSION['account_type'];
 
 // Get info from the URL:
 $item_id = $_GET['item_id'] ?? null;
@@ -128,7 +129,7 @@ if ($now < $end_time) {
       <?php
       /* The following watchlist functionality uses JavaScript, but could
         just as easily use PHP as in other places in the code */
-      if ($now < $end_time) :
+      if ($now < $end_time && $account_type == '1') :
       ?>
         <div id="watch_nowatch" <?php if ($has_session && $watching) echo ('style="display: none"'); ?>>
           <button type="button" class="btn btn-outline-secondary btn-sm" data-userid="<?php echo $user_id; ?>" data-itemid="<?php echo $item_id; ?>" onclick="addToWatchlist()">+ Add to watchlist</button>
@@ -162,43 +163,35 @@ if ($now < $end_time) {
     <div class="col-sm-4"> <!-- Right col with bidding info -->
 
       <p>
-        <?php if ($now > $end_time) : ?>
-      <p>This auction ended <?php echo htmlspecialchars($end_time->format('j M H:i')); ?></p>
-      <!-- Added code to display auction result -->
-      <?php
-          // Query to fetch auction result details
-          // TODO: Print the result of the auction here?
-          echo "<p>The winning bid was $" . number_format($current_price, 2) . " " . $current_winner . "</p>";
-      ?>
+    <?php if ($now > $end_time) : ?>
+        <p>This auction ended <?php echo htmlspecialchars($end_time->format('j M H:i')); ?></p>
+        <!-- Added code to display auction result -->
+        <?php
+            // Query to fetch auction result details
+            // TODO: Print the result of the auction here?
+            echo "<p>The winning bid was $" . number_format($current_price, 2) . " " . $current_winner . "</p>";
+        ?>
     <?php else : ?>
-      Auction ends <?php echo (date_format($end_time, 'j M H:i') . $time_remaining) ?></p>
-      <p class="lead">Current bid: £<?php echo (number_format($current_price, 2)) ?></p>
-
-      <!-- Bidding form -->
-      <form method="POST" action="place_bid.php">
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text">£</span>
-        </div>
-        <input type="number" class="form-control" id="bid" name="bid">
-      </div>
-      <input type="hidden" name="auction_id" value="<?php echo($auction_id) ?>">
-      <button type="submit" class="btn btn-primary form-control">Place bid</button>
-      </form>
+      <?php if ($account_type == '1') : ?>
+        <p>Auction ends <?php echo date_format($end_time, 'j M H:i') . $time_remaining ?></p>
+        <p class="lead">Current bid: £<?php echo number_format($current_price, 2) ?></p>
 
         <!-- Bidding form -->
         <form method="POST" action="place_bid.php">
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text">£</span>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">£</span>
+                </div>
+                <input type="number" class="form-control" id="bid" name="bid">
             </div>
-            <input type="number" class="form-control" id="bid" name="bid">
-          </div>
-          <input type="hidden" name="auction_id" value="<?php echo $auction_id ?>">
-          <input type="hidden" name="current_price" value="<?php echo $current_price ?>">
-          <button type="submit" class="btn btn-primary form-control">Place bid</button>
+            <input type="hidden" name="auction_id" value="<?php echo $auction_id ?>">
+            <input type="hidden" name="current_price" value="<?php echo $current_price ?>">
+            <button type="submit" class="btn btn-primary form-control">Place bid</button>
         </form>
-      <?php endif ?>
+        <?php endif ?>
+    <?php endif ?>
+
+
 
 
     </div> <!-- End of right col with bidding info -->

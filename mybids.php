@@ -24,27 +24,29 @@ if (!$has_session) {
 
     // TODO: Use user_id to make a query to the database.
     $auction_query = "SELECT 
-    U.user_id,
-    B.price,
-    B.time_of_bid,
-    I.name AS item_name,
-    I.description AS item_description,
-    I.colour AS item_colour,
-    I.condition AS item_condition,
-    I.category As item_category,
-    I.photo AS item_photo,
-    A.auction_id,
-    A.start_time AS auction_start_time,
-    A.end_time AS auction_end_time,
-    A.auction_title,
-    A.reserve_price,
-    A.starting_price,
-    (SELECT MAX(B2.price) FROM Bids B2 WHERE B2.auction_id = A.auction_id) AS highest_bid
-FROM Users U
-JOIN Bids B ON U.user_id = B.user_id
-JOIN Auction A ON B.auction_id = A.auction_id
-JOIN Item I ON A.item_id = I.item_id
-WHERE U.user_id = '$user_id'";
+                        U.user_id,
+                        B.price,
+                        B.time_of_bid,
+                        I.item_id,
+                        I.name AS item_name,
+                        I.description AS item_description,
+                        I.colour AS item_colour,
+                        I.condition AS item_condition,
+                        I.category As item_category,
+                        I.photo AS item_photo,
+                        A.auction_id,
+                        A.start_time AS auction_start_time,
+                        A.end_time AS auction_end_time,
+                        A.auction_title,
+                        A.reserve_price,
+                        A.starting_price,
+                      (SELECT MAX(B2.price) FROM Bids B2 WHERE B2.auction_id = A.auction_id) AS highest_bid
+                       FROM Users U
+                       JOIN Bids B ON U.user_id = B.user_id
+                       JOIN Auction A ON B.auction_id = A.auction_id
+                       JOIN Item I ON A.item_id = I.item_id
+                       WHERE U.user_id = '$user_id'
+                       ORDER BY B.time_of_bid DESC";
     $auction_result = db_query($connection, $auction_query);
 
     // Check if item exists
@@ -106,7 +108,7 @@ WHERE U.user_id = '$user_id'";
             <?php
             echo "<br />";
             if ($bid_price == $highest_bid) {
-              echo "<span class='badge badge-pill badge-success'>highest bid</span>";
+              echo "<span class='badge badge-pill badge-success'>Highest bid</span>";
             } else {
               echo "<span class='badge badge-pill badge-danger'>Not the highest bid</span>
                   <a href='place_bid.php' class='btn btn-primary btn-sm mt-2'>Place a Bid</a>
@@ -121,6 +123,8 @@ WHERE U.user_id = '$user_id'";
 
     <?php
     }
+    db_free_result($auction_result);
+    db_disconnect($connection);
     ?>
 
   </ul>

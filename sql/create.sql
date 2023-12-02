@@ -9,7 +9,9 @@ CREATE TABLE Users (
     role BOOL, -- 0 for seller, 1 for buyer
     first_name VARCHAR(255),
     last_name VARCHAR(255),
-    UNIQUE(email)
+    UNIQUE(email),
+    total_ratings INT(11) DEFAULT 0,
+    average_rating FLOAT DEFAULT 0.0
 );
 
 CREATE TABLE Item (
@@ -31,8 +33,8 @@ CREATE TABLE Auction (
     auction_title VARCHAR(255),
     reserve_price FLOAT(2),
     starting_price FLOAT(2),
-    FOREIGN KEY (item_id) REFERENCES Item(item_id)
-    FOREIGN KEY (user_id) REFERENCES User(user_id)
+    FOREIGN KEY (item_id) REFERENCES Item(item_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
 
 CREATE TABLE Bids (
@@ -51,4 +53,14 @@ CREATE TABLE Watchlist (
     FOREIGN KEY (user_id) REFERENCES Users(user_id),
     FOREIGN KEY (item_id) REFERENCES Item(item_id),
     PRIMARY KEY (user_id, item_id)
+);
+
+CREATE TABLE Ratings (
+    rating_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    rater_user_id INT(11) NOT NULL,
+    rated_user_id INT(11) NOT NULL,
+    rating_value ENUM('0', '1', '2', '3', '4', '5'),
+    UNIQUE (rater_user_id, rated_user_id),
+    FOREIGN KEY (rater_user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (rated_user_id) REFERENCES Users(user_id)
 );
