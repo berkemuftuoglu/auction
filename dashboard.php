@@ -102,11 +102,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             $bids = "mybids.php.php";
             $watchlist = "watchlist.php";
             $recommendations = "recommendations.php";
+            $won_auctions = "won_auctions.php";
 
             echo '<li><a href="' . $browse . '">Browse Listings</a></li>';
             echo '<li><a href="' . $bids . '">See My Current Bids</a></li>';
             echo '<li><a href="' . $watchlist . '">Check Out My Watchlist</a></li>';
             echo '<li><a href="' . $recommendations . '">Look At Recommended Items</a></li>';
+            echo '<li><a href="' . $won_auctions . '">View Won Auctions and Rate Sellers</a></li>';
             echo '<br>';
         };
     ?> 
