@@ -118,12 +118,12 @@ if (!$has_session) {
             if ($bid_price == $highest_bid) {
               echo "<span class='badge badge-pill badge-success'>Highest bid</span>";
             } else {
-              echo "<span class='badge badge-pill badge-danger'>Not the highest bid</span>
-              <form action='listing.php?item_id=" . urlencode($item_id) . "' method='post'>
-                  <input type='submit' class='btn btn-primary btn-sm mt-2' value='Place a Bid'/>
-                  </form>
-            
-            ";
+              echo "<span class='badge badge-pill badge-danger'>Not the highest bid</span>";
+              if ($now < $auction_end_time) {
+                echo "<form action='listing.php?item_id=" . urlencode($item_id) . "' method='post'>
+                <input type='submit' class='btn btn-primary btn-sm mt-2' value='Place a Bid'/>
+                </form>";
+              }
             }
             ?>
           </ul>
