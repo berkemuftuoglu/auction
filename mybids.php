@@ -56,9 +56,11 @@ if (!$has_session) {
       exit;
     }
     while ($row = mysqli_fetch_assoc($auction_result)) {
+      $item_id = $row['item_id'];
       $item_name = $row['item_name'];
       $item_description = $row['item_description'];
       $item_photo = $row['item_photo'];
+      $auction_id = $row['auction_id'];
       $auction_reserve_price = $row['reserve_price'];
       $auction_starting_price = $row['starting_price'];
       $auction_title = $row['auction_title'];
@@ -75,7 +77,13 @@ if (!$has_session) {
         $desc_shortened = $item_description;
       }
 
+      // need to have the times at DateTime objects
+      $format = 'Y-m-d H:i:s';
+      $auction_start_time = DateTime::createFromFormat($format, $auction_start_time);
+      $auction_end_time = DateTime::createFromFormat($format, $auction_end_time);
+
       $now = new DateTime();
+
       if ($now > $auction_end_time) {
         $time_remaining = 'This auction has ended';
       } else {
@@ -91,7 +99,7 @@ if (!$has_session) {
         <div class="d-flex align-items-center p-2 mr-5">
           <img src="<?php echo $item_photo; ?>" alt="<?php echo $auction_title; ?>" class="img-fluid" style="max-width: 120px; max-height: 120px;">
           <div class="ml-3">
-            <h5><a href="listing.php?item_id=<?php echo urlencode($row[item_id]); ?>">
+            <h5><a href="listing.php?item_id=<?php echo urlencode($row['item_id']); ?>">
                 <?php echo $auction_title; ?>
               </a> </h5>
             <?php echo $desc_shortened; ?>
@@ -111,7 +119,9 @@ if (!$has_session) {
               echo "<span class='badge badge-pill badge-success'>Highest bid</span>";
             } else {
               echo "<span class='badge badge-pill badge-danger'>Not the highest bid</span>
-                  <a href='place_bid.php' class='btn btn-primary btn-sm mt-2'>Place a Bid</a>
+              <form action='listing.php?item_id=" . urlencode($item_id) . "' method='post'>
+                  <input type='submit' class='btn btn-primary btn-sm mt-2' value='Place a Bid'/>
+                  </form>
             
             ";
             }
