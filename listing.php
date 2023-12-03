@@ -21,23 +21,8 @@ if (!$item_id) {
 // Establish database connection
 $connection = db_connect();
 
-//auction id
-$auction_query = "SELECT auction_id FROM Auction WHERE item_id = '$item_id'";
-$auction_result = db_query($connection, $auction_query);
-$auction_data = db_fetch_single($auction_result);
-$auction_id = $auction_data['auction_id'];
-
-
-// TODO: Use item_id to make a query to the database.
-$item_query = "SELECT auction.auction_title,
-                        auction.start_time,
-                        auction.end_time,
-                        item.name,
-                        item.description,
-                        item.photo
-  FROM auction
-  INNER JOIN item ON auction.item_id = item.item_id
-  WHERE auction.auction_id = '$item_id'";
+// Fetch item details
+$item_query = "SELECT name, description, photo FROM Item WHERE item_id = '$item_id'";
 $item_result = db_query($connection, $item_query);
 
 // Check if item exists
@@ -47,37 +32,71 @@ if (db_num_rows($item_result) == 0) {
   exit;
 }
 
-// Get item details
 $item = db_fetch_single($item_result);
-$title = $item['auction_title'];
+$name = $item['name'];
 $description = $item['description'];
 $item_photo = $item['photo'];
-$end_time = new DateTime($item['end_time']); //NOT SURE ABOUT THIS ONE
 
-// Get current price and number of bids
-$bid_query = "SELECT b.price AS current_price, u.user_id, u.first_name, u.last_name, COUNT(*) AS num_bids
-              FROM Bids b
-              INNER JOIN Users u ON b.user_id = u.user_id
-              WHERE b.auction_id = '$item_id'
-              AND b.price = (SELECT MAX(price) FROM Bids WHERE auction_id = '$item_id')
-              GROUP BY b.price, u.user_id, u.first_name, u.last_name";
+// Check if the item is part of an auction
+$auction_query = "SELECT auction_id, start_time, end_time, auction_title
+                  FROM Auction WHERE item_id = '$item_id'";
+$auction_result = db_query($connection, $auction_query);
+$auction_exists = db_num_rows($auction_result) > 0;
 
-$bid_result = db_query($connection, $bid_query);
-$bid_data = db_fetch_single($bid_result);
 
-// Check if there is any bid data
-if ($bid_data) {
-  $current_price = $bid_data['current_price'] ?: '0.00';
-  $current_winner = $bid_data['first_name'] . ' ' . $bid_data['last_name']; // Concatenate first name and last name
-  $num_bids = $bid_data['num_bids'];
+if ($auction_exists) {
+  // Item is part of an auction
+  $auction_data = db_fetch_single($auction_result);
+  $auction_id = $auction_data['auction_id'];
+  $title = $auction_data['auction_title'];
+  $start_time = new DateTime($auction_data['start_time']);
+  $end_time = new DateTime($auction_data['end_time']);
+
+  // Get current price and number of bids
+  $bid_query = "SELECT b.price AS current_price, u.user_id, u.first_name, u.last_name, COUNT(*) AS num_bids
+  FROM Bids b
+  INNER JOIN Users u ON b.user_id = u.user_id
+  WHERE b.auction_id = '$item_id'
+  AND b.price = (SELECT MAX(price) FROM Bids WHERE auction_id = '$item_id')
+  GROUP BY b.price, u.user_id, u.first_name, u.last_name";
+
+  $bid_result = db_query($connection, $bid_query);
+  $bid_data = db_fetch_single($bid_result);
+  
+  // Check if there is any bid data
+  if ($bid_data) {
+    $current_price = $bid_data['current_price'] ?: '0.00';
+    $current_winner = $bid_data['first_name'] . ' ' . $bid_data['last_name']; // Concatenate first name and last name
+    $num_bids = $bid_data['num_bids'];
+  } else {
+    // Default values if no bids are found
+    $current_price = '0.00';
+    $current_winner = 'None';
+    $num_bids = 0;
+  }
+
+
+
+db_free_result($bid_result);
+
+// Calculate time to auction end:
+$now = new DateTime();
+if ($now < $end_time) {
+  $time_to_end = date_diff($now, $end_time);
+  $time_remaining = ' (in ' . display_time_remaining($time_to_end) . ')';
+}
 } else {
-  // Default values if no bids are found
-  $current_price = '0.00';
-  $current_winner = 'None';
-  $num_bids = 0;
+  //Item is not part of an auction
+  $title = $name;
 }
 
 
+
+// TODO: Use item_id to make a query to the database.
+
+// Get current price and number of bids
+
+//watchlist related
 $watching = false;
 if ($has_session) {
     $watchlist_query = "SELECT 1
@@ -91,7 +110,6 @@ if ($has_session) {
 
 // Clean up the result sets
 db_free_result($item_result);
-db_free_result($bid_result);
 if (isset($watchlist_result)) {
   db_free_result($watchlist_result);
 }
@@ -101,14 +119,6 @@ if (isset($watchlist_result)) {
 //       like whether the auction ended in a sale or was cancelled due
 //       to lack of high-enough bids. Or maybe not.
 
-// Calculate time to auction end:
-$now = new DateTime();
-
-if ($now < $end_time) {
-  $time_to_end = date_diff($now, $end_time);
-  $time_remaining = ' (in ' . display_time_remaining($time_to_end) . ')';
-}
-
 // TODO: If the user has a session, use it to make a query to the database
 //       to determine if the user is already watching this item.
 //       For now, this is hardcoded.
@@ -116,86 +126,82 @@ if ($now < $end_time) {
 //DONE $watching = false;
 ?>
 
-
 <div class="container">
-
-
-
-  <div class="row"> <!-- Row #1 with auction title + watch button -->
-    <div class="col-sm-8"> <!-- Left col -->
+  <div class="row mt-4 mb-4"> <!-- Top row with title and watch button -->
+    <div class="col-md-8"> <!-- Left col -->
       <h2 class="my-3"><?php echo ($title); ?></h2>
     </div>
-    <div class="col-sm-4 align-self-center"> <!-- Right col -->
-      <?php
-      /* The following watchlist functionality uses JavaScript, but could
-        just as easily use PHP as in other places in the code */
-      if ($now < $end_time && $account_type == '1') :
-      ?>
-        <div id="watch_nowatch" <?php if ($has_session && $watching) echo ('style="display: none"'); ?>>
-          <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addToWatchlist()">+ Add to watchlist</button>
-        </div>
-        <div id="watch_watching" <?php if (!$has_session || !$watching) echo ('style="display: none"'); ?>>
-          <button type="button" class="btn btn-success btn-sm" disabled>Watching</button>
-          <button type="button" class="btn btn-danger btn-sm" onclick="removeFromWatchlist()">Remove watch</button>
-        </div>
-      <?php endif /* Print nothing otherwise */ ?>
-    </div>
+
+    <?php if ($auction_exists && $account_type == '1'): ?>
+      <div class="col-md-4 align-self-center text-right"> <!-- Right col -->
+        <!-- Watchlist functionality -->
+        <?php if ($now < $end_time) : ?>
+          <div id="watch_nowatch" <?php if ($has_session && $watching) echo ('style="display: none"'); ?>>
+            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addToWatchlist()">
+              <i class="fa fa-plus" aria-hidden="true"></i> Add to watchlist
+            </button>
+          </div>
+          <div id="watch_watching" <?php if (!$has_session || !$watching) echo ('style="display: none"'); ?>>
+            <button type="button" class="btn btn-success btn-sm" disabled><i class="fa fa-eye" aria-hidden="true"></i> Watching</button>
+            <button type="button" class="btn btn-danger btn-sm" onclick="removeFromWatchlist()">
+              <i class="fa fa-times" aria-hidden="true"></i> Remove
+            </button>
+          </div>
+        <?php endif; ?>
+      </div>
+    <?php endif; ?>
   </div>
 
-  <div class="row"> <!-- Row #0 with item image -->
-    <div class="col-sm-8">
+  <div class="row"> <!-- Row with item image -->
+    <div class="col-md-8">
       <?php if (!empty($item['photo'])) : ?>
-        <img src="<?php echo $item['photo']; ?>" alt="Item Image" class="img-fluid">
+        <img src="<?php echo $item['photo']; ?>" alt="Item Image" class="img-fluid rounded">
       <?php endif; ?>
     </div>
   </div>
 
-
-  <div class="row"> <!-- Row #2 with auction description + bidding info -->
-    <div class="col-sm-8"> <!-- Left col with item info -->
-
+  <div class="row mt-3"> <!-- Row with item description and bidding info -->
+    <div class="col-md-8"> <!-- Left col with item info -->
       <div class="itemDescription">
-        <?php echo ($description); ?>
+        <p><?php echo ($description); ?></p>
       </div>
-
     </div>
 
-    <div class="col-sm-4"> <!-- Right col with bidding info -->
+    <?php if ($auction_exists): ?>
+      <div class="col-md-4"> <!-- Right col with bidding info -->
+        <div class="card">
+          <div class="card-body">
+            <?php if ($now > $end_time) : ?>
+              <h5 class="card-title">Auction Ended</h5>
+              <p class="card-text"><small class="text-muted"><?php echo htmlspecialchars($end_time->format('j M H:i')); ?></small></p>
+              <p>The winning bid was £<?php echo number_format($current_price, 2); ?></p>
+            <?php elseif ($account_type == '1'): ?>
+              <h5 class="card-title">Auction Details</h5>
+              <p class="card-text">Ends: <?php echo date_format($end_time, 'j M H:i') . $time_remaining ?></p>
+              <p class="lead">Current bid: £<?php echo number_format($current_price, 2) ?></p>
+              <!-- Bidding form -->
+              <form method="POST" action="place_bid.php">
+                  <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text">£</span>
+                      </div>
+                      <input type="number" class="form-control" id="bid" name="bid">
+                  </div>
+                  <input type="hidden" name="auction_id" value="<?php echo $auction_id ?>">
+                  <input type="hidden" name="current_price" value="<?php echo $current_price ?>">
+                  <button type="submit" class="btn btn-primary">Place bid</button>
+              </form>
+            <?php endif; ?>
+          </div>
+        </div>
+      </div> <!-- End of right col with bidding info -->
+    <?php endif; ?>
+  </div> <!-- End of row with item description and bidding info -->
+</div> <!-- End of container -->
 
-      <p>
-    <?php if ($now > $end_time) : ?>
-        <p>This auction ended <?php echo htmlspecialchars($end_time->format('j M H:i')); ?></p>
-        <!-- Added code to display auction result -->
-        <?php
-            // Query to fetch auction result details
-            // TODO: Print the result of the auction here?
-            echo "<p>The winning bid was $" . number_format($current_price, 2) . " " . $current_winner . "</p>";
-        ?>
-    <?php else : ?>
-      <?php if ($account_type == '1') : ?>
-        <p>Auction ends <?php echo date_format($end_time, 'j M H:i') . $time_remaining ?></p>
-        <p class="lead">Current bid: £<?php echo number_format($current_price, 2) ?></p>
-
-        <!-- Bidding form -->
-        <form method="POST" action="place_bid.php">
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">£</span>
-                </div>
-                <input type="number" class="form-control" id="bid" name="bid">
-            </div>
-            <input type="hidden" name="auction_id" value="<?php echo $auction_id ?>">
-            <input type="hidden" name="current_price" value="<?php echo $current_price ?>">
-            <button type="submit" class="btn btn-primary form-control">Place bid</button>
-        </form>
-        <?php endif ?>
-    <?php endif ?>
-    </div> <!-- End of right col with bidding info -->
-  </div> <!-- End of row #2 -->
+<?php include_once("footer.php") ?>
 
 
-
-  <?php include_once("footer.php") ?>
 
 
   <script>
