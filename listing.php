@@ -208,7 +208,6 @@ if (isset($watchlist_result)) {
     // JavaScript functions: addToWatchlist and removeFromWatchlist.
 
     function addToWatchlist(button) {
-      console.log("These print statements are helpful for debugging btw");
 
       // This performs an asynchronous call to a PHP function using POST method.
       // Sends item ID as an argument to that function.
@@ -221,8 +220,9 @@ if (isset($watchlist_result)) {
 
         success: function(obj, textstatus) {
           // Callback function for when call is successful and returns obj
-          console.log("Success");
           var objT = obj.trim();
+
+          console.log(objT);
 
           if (objT == "success") {
             $("#watch_nowatch").hide();
