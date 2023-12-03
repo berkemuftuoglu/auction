@@ -73,7 +73,7 @@
         // ************************ check photo  ************************ 
 
         // File upload handling
-        echo $_FILES["image"]["name"];
+        # echo $_FILES["image"]["name"];
 
         $targetDirectory = "photos/";
         $targetFile = $targetDirectory . basename($_FILES["image"]["name"]);
@@ -147,7 +147,7 @@
     // *********************************************************
 
     // Now $X contains the value entered in the 'X' field
-    echo '<div class="text-center mt-3">';
+    echo '<div class="text-left mt-3">';
     echo '<h3>Entered Values:</h3>';
     echo "<p><strong>Name:</strong> " . $name . "</p>";
     echo "<p><strong>Description:</strong> " . $description . "</p>";
@@ -166,7 +166,7 @@
     // *****************************************************
 
     $filePath = "/" . "photos/" . basename($_FILES["image"]["name"]);
-    echo 'File path = ' . $filePath;
+    #echo 'File path = ' . $filePath;
 
     // Insert data into the database
     // ********************** Add photo to auction_query  **********************
@@ -179,7 +179,7 @@
     // Check item values
     if ($item_result) {
             // echo "Item added to DB <br>";
-            echo '<div class="alert alert-success mt-3" role="alert"> Item data inserted successfully! </div>';
+            # echo '<div class="alert alert-success mt-3" role="alert"> Item data inserted successfully! </div>';
 
             // Get the last inserted item_id
             $item_id = mysqli_insert_id($connection);
@@ -190,17 +190,17 @@
 
             $auction_result = db_query($connection, $auction_query);
             if ($auction_result) {
-                echo '<div class="alert alert-success mt-3" role="alert"> Auction data inserted successfully! </div>';
+                #echo '<div class="alert alert-success mt-3" role="alert"> Auction data inserted successfully! </div>';
             } 
             else { 
-                echo '<div class="alert alert-danger mt-3" role="alert"> Error: adding data to auction table </div>';
+                #echo '<div class="alert alert-danger mt-3" role="alert"> Error: adding data to auction table </div>';
                 db_disconnect($connection);    
                 exit();
                 // error_log("Auction Insert Error: " . mysqli_error($connection));
             }
         } 
     else {
-            echo '<div class="alert alert-danger mt-3" role="alert"> Error: adding data to item table </div>';
+            #echo '<div class="alert alert-danger mt-3" role="alert"> Error: adding data to item table </div>';
             db_disconnect($connection);
             exit();
         }

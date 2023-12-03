@@ -183,7 +183,7 @@
       <!--****************************************************************--> 
       <!--****************************************************************--> 
 
-        <button type="submit" class="btn btn-primary form-control">sCreate Auction</button>
+        <button type="submit" class="btn btn-primary form-control">Create Auction</button>
       </form>
 
 
