@@ -73,7 +73,12 @@
 
 </form>
 
-<div class="text-center">Already have an account? <a href="" data-toggle="modal" data-target="#loginModal">Login</a>
+<?php
+    // Determine the base URL dynamically
+    $login = 'login.php';
+    // Display the registration link with the dynamic base URL
+    echo '<div class="text-center">Already have an account? <a href="' . $login . '">Login</a></div>';
+?>
 
 </div>
 
