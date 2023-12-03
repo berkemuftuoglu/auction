@@ -37,21 +37,19 @@ function updateUserField($field, $new_value, $user_id) {
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
     $user_id = $_POST['user_id'];
 
-    if (isset($_POST['new_first_name'])) {
+    if (isset($_POST['new_first_name']) && $_POST['new_first_name'] != '') {
         updateUserField('first_name', $_POST['new_first_name'], $user_id);
-    } elseif (isset($_POST['new_last_name'])) {
+    } 
+
+    if (isset($_POST['new_last_name']) && $_POST['new_last_name'] != '') {
         updateUserField('last_name', $_POST['new_last_name'], $user_id);
-    } elseif (isset($_POST['new_email'])) {
+    } 
+
+    if (isset($_POST['new_email']) && $_POST['new_email'] != '') {
         updateUserField('email', $_POST['new_email'], $user_id);
-    } elseif (isset($_POST['new_role'])) {
-        if ($_POST['new_role'] == 'Seller') {
-            updateUserField('role', 0, $user_id);
-        } elseif ($_POST['new_role'] == 'Buyer') {
-            updateUserField('role', 1, $user_id);
-        } else {
-            updateUserField('', '', '');
-        }
-    } elseif (isset($_POST['new_password'])) {
+    } 
+
+    if (isset($_POST['new_password']) && $_POST['new_password'] != '') {
         updateUserField('password', $_POST['new_password'], $user_id);
     }
 
