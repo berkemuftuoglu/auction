@@ -20,21 +20,18 @@ $user = db_fetch_single($result);
 db_free_result($result);
 db_disconnect($connection);
 
+
+
 function updateUserField($field, $new_value, $user_id) {
     $connection = db_connect();
 
-    $update_query = "UPDATE users SET $field = ? WHERE user_id = ?";
-    $stmt = mysqli_prepare($connection, $update_query);
-    mysqli_stmt_bind_param($stmt, 'si', $new_value, $user_id);
-    mysqli_stmt_execute($stmt);
+    $update_query = "UPDATE users SET $field = '$new_value' WHERE user_id = '$user_id'";
+    $stmt = db_query($connection, $update_query);
 
-    if (mysqli_stmt_affected_rows($stmt) == 1) {
-        echo '<div class="alert alert-success mt-3" role="alert"> Update successful, refresh the page! </div>';
-    } else {
-        #echo "Update failed!";
-    }
+    confirm_result_set($stmt);
+    echo '<div class="alert alert-success mt-3" role="alert"> Update successful, refresh the page! </div>';
 
-    mysqli_stmt_close($stmt);
+    db_free_result($stmt);
     db_disconnect($connection);
 }
 
