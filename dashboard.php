@@ -23,18 +23,12 @@ db_disconnect($connection);
 function updateUserField($field, $new_value, $user_id) {
     $connection = db_connect();
 
-    $update_query = "UPDATE users SET $field = ? WHERE user_id = ?";
-    $stmt = mysqli_prepare($connection, $update_query);
-    mysqli_stmt_bind_param($stmt, 'si', $new_value, $user_id);
-    mysqli_stmt_execute($stmt);
+    $update_query = "UPDATE users SET $field = '$new_value' WHERE user_id = '$user_id'";
+    $stmt = db_query($connection, $update_query);
 
-    if (mysqli_stmt_affected_rows($stmt) == 1) {
-        echo "Update successful!";
-    } else {
-        echo "Update failed!";
-    }
+    confirm_result_set($stmt);
 
-    mysqli_stmt_close($stmt);
+    db_free_result($stmt);
     db_disconnect($connection);
 }
 
