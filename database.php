@@ -56,3 +56,8 @@ function db_free_result($result)
 {
   mysqli_free_result($result);
 }
+
+function db_fetch_array($result)
+{
+  return mysqli_fetch_array($result);
+}

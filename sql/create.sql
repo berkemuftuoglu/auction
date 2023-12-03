@@ -34,7 +34,7 @@ CREATE TABLE Auction (
     reserve_price FLOAT(2),
     starting_price FLOAT(2),
     FOREIGN KEY (item_id) REFERENCES Item(item_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Bids (
@@ -43,15 +43,15 @@ CREATE TABLE Bids (
     user_id INT(11) NOT NULL,
     time_of_bid DATETIME NOT NULL,
     price FLOAT(2),
-    FOREIGN KEY (auction_id) REFERENCES Auction(auction_id),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    FOREIGN KEY (auction_id) REFERENCES Auction(auction_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Watchlist (
     user_id INT(11) NOT NULL,
     item_id INT(11) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id),
-    FOREIGN KEY (item_id) REFERENCES Item(item_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (item_id) REFERENCES Item(item_id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, item_id)
 );
 
@@ -61,7 +61,22 @@ CREATE TABLE Ratings (
     rated_user_id INT(11) NOT NULL,
     item_id INT(11) NOT NULL,
     rating_value ENUM('0', '1', '2', '3', '4', '5'),
+<<<<<<< HEAD
     FOREIGN KEY (rater_user_id) REFERENCES Users(user_id),
     FOREIGN KEY (rated_user_id) REFERENCES Users(user_id),
     FOREIGN KEY (item_id) REFERENCES Item(item_id)
+=======
+    UNIQUE (rater_user_id, rated_user_id),
+    FOREIGN KEY (rater_user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (rated_user_id) REFERENCES Users(user_id) ON DELETE CASCADE
+>>>>>>> berke_admin
+);
+
+CREATE TABLE Admins (
+    admin_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    UNIQUE(email)
 );
