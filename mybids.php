@@ -75,7 +75,13 @@ if (!$has_session) {
         $desc_shortened = $item_description;
       }
 
+      // need to have the times at DateTime objects
+      $format = 'Y-m-d H:i:s';
+      $auction_start_time = DateTime::createFromFormat($format, $auction_start_time);
+      $auction_end_time = DateTime::createFromFormat($format, $auction_end_time);
+
       $now = new DateTime();
+
       if ($now > $auction_end_time) {
         $time_remaining = 'This auction has ended';
       } else {
