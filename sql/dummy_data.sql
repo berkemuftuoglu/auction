@@ -17,8 +17,8 @@ VALUES
 -- Auction Table
 INSERT INTO Auction (item_id, user_id, start_time, end_time, auction_title, reserve_price, starting_price)
 VALUES 
-    (1, 2, '2024-11-01 12:00:00', '2023-11-10 18:00:00', 'Latest Smartphone Auction', 500.00, 200.00),
-    (2, 2, '2024-11-05 14:00:00', '2023-11-15 20:00:00', 'Vintage Bookshelf Sale', 150.00, 50.00),
+    (1, 2, '2023-11-01 12:00:00', '2024-11-10 18:00:00', 'Latest Smartphone Auction', 500.00, 200.00),
+    (2, 2, '2023-11-05 14:00:00', '2024-11-15 20:00:00', 'Vintage Bookshelf Sale', 150.00, 50.00),
     (3, 3, '2023-11-08 10:00:00', '2023-11-18 15:00:00', 'Designer Dress Auction', 300.00, 100.00),
     (4, 4, '2023-11-12 09:00:00', '2023-11-22 12:00:00', 'Modern Coffee Table Bidding', 200.00, 80.00);
 
