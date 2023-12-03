@@ -39,3 +39,7 @@ VALUES
     (2, 1),
     (3, 4),
     (2, 3);
+
+INSERT INTO Admins (email, password, first_name, last_name)
+VALUES 
+    ('admin', 'admin', 'Napoleon', 'Bonaparte');
