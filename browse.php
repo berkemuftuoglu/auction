@@ -115,12 +115,11 @@
              FROM item
              INNER JOIN auction
              ON item.item_id = auction.item_id
-             INNER JOIN bids
+             LEFT JOIN bids
              ON auction.auction_id = bids.auction_id
              WHERE item.name LIKE '%$keyword%'
              OR item.description LIKE '%$keyword%'
              OR auction.auction_title LIKE '%$keyword%'
-             AND auction.item_id = item.item_id
              GROUP BY item.item_id,
                       auction.auction_title,
                       auction.end_time";
