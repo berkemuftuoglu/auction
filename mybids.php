@@ -56,9 +56,11 @@ if (!$has_session) {
       exit;
     }
     while ($row = mysqli_fetch_assoc($auction_result)) {
+      $item_id = $row['item_id'];
       $item_name = $row['item_name'];
       $item_description = $row['item_description'];
       $item_photo = $row['item_photo'];
+      $auction_id = $row['auction_id'];
       $auction_reserve_price = $row['reserve_price'];
       $auction_starting_price = $row['starting_price'];
       $auction_title = $row['auction_title'];
@@ -111,7 +113,9 @@ if (!$has_session) {
               echo "<span class='badge badge-pill badge-success'>Highest bid</span>";
             } else {
               echo "<span class='badge badge-pill badge-danger'>Not the highest bid</span>
-                  <a href='place_bid.php' class='btn btn-primary btn-sm mt-2'>Place a Bid</a>
+              <form action='listing.php?item_id=" . urlencode($item_id) . "' method='post'>
+                  <input type='submit' class='btn btn-primary btn-sm mt-2' value='Place a Bid'/>
+                  </form>
             
             ";
             }
