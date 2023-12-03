@@ -59,8 +59,9 @@ CREATE TABLE Ratings (
     rating_id INT(11) AUTO_INCREMENT PRIMARY KEY,
     rater_user_id INT(11) NOT NULL,
     rated_user_id INT(11) NOT NULL,
+    item_id INT(11) NOT NULL,
     rating_value ENUM('0', '1', '2', '3', '4', '5'),
-    UNIQUE (rater_user_id, rated_user_id),
     FOREIGN KEY (rater_user_id) REFERENCES Users(user_id),
-    FOREIGN KEY (rated_user_id) REFERENCES Users(user_id)
+    FOREIGN KEY (rated_user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (item_id) REFERENCES Item(item_id)
 );

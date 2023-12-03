@@ -41,10 +41,14 @@
   db_free_result($won_auctions);
   db_disconnect($connection);
 
-  function checkRated($raterUserId, $ratedUserId) {
+  function checkRated($raterUserId, $ratedUserId, $soldItem) {
     $connection = db_connect();
     
-    $stmt = "SELECT COUNT(*) AS num_ratings FROM ratings WHERE rater_user_id = '$raterUserId' AND rated_user_id = '$ratedUserId'";
+    $stmt = "SELECT COUNT(*) AS num_ratings
+             FROM ratings 
+             WHERE rater_user_id = '$raterUserId'
+             AND rated_user_id = '$ratedUserId'
+             AND item_id = '$soldItem'";
 
     $rating_call = db_query($connection, $stmt);
     confirm_result_set($rating_call);
@@ -55,12 +59,13 @@
     return $rating_count;
   }
   
-  function rateSeller($raterUserId, $ratedUserId, $ratingValue) {
+  function rateSeller($raterUserId, $ratedUserId, $ratingValue, $soldItem) {
     $connection = db_connect();
-    $existingRatingCount = checkRated($raterUserId, $ratedUserId);
+    $existingRatingCount = checkRated($raterUserId, $ratedUserId, $soldItem);
 
     if ($existingRatingCount == 0) {
-        $stmt = "INSERT INTO ratings (rater_user_id, rated_user_id, rating_value) VALUES ('$raterUserId', '$ratedUserId', '$ratingValue')";
+        $stmt = "INSERT INTO ratings (rater_user_id, rated_user_id, rating_value, item_id)
+                 VALUES ('$raterUserId', '$ratedUserId', '$ratingValue', '$soldItem')";
         $rate_call = db_query($connection, $stmt);
         confirm_result_set($rate_call);
         db_free_result($rate_call);
@@ -76,15 +81,19 @@
     db_disconnect($connection);
 } 
 
-function getUserRating($userId) {
+function getUserRating($raterUserId, $ratedUserId, $soldItem) {
     $connection = db_connect();
-    $stmt = "SELECT average_rating FROM users WHERE user_id = '$userId'";
+    $stmt = "SELECT rating_value
+             FROM ratings
+             WHERE rater_user_id = '$raterUserId'
+             AND rated_user_id = '$ratedUserId'
+             AND item_id = '$soldItem'";
     $rating_call = db_query($connection, $stmt);
     confirm_result_set($rating_call);
 
     $rating = db_fetch_single($rating_call);
 
-    $userRating = $rating["average_rating"];
+    $userRating = $rating["rating_value"];
 
     db_free_result($rating_call);
     db_disconnect($connection);
@@ -102,28 +111,10 @@ function getUserRating($userId) {
 
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
         if (isset($_POST['rate'])) {
-            rateSeller($user_id, $seller_id, $_POST['rate']);
+            rateSeller($user_id, $seller_id, $_POST['rate'], $item_id);
         }
       }
 
-    // if (checkRated($user_id, $seller_id) == 0){
-    //     echo "Rate this Seller!";
-    //     echo('
-    //     <form method="post" action="">
-    //         <select name="rate" id="rate">
-    //             <option value=0>0</option>
-    //             <option value=1>1</option>
-    //             <option value=2>2</option>
-    //             <option value=3>3</option>
-    //             <option value=4>4</option>
-    //             <option value=5>5</option>
-    //         </select>
-    //         <input type="submit" name="submit" value="Submit">
-    //     </form>');
-    // } else {
-    //     $seller_rating = getUserRating($seller_id);
-    //     echo $seller_rating;
-    // }
 
     
     if (strlen($description) > 250) {
@@ -132,18 +123,6 @@ function getUserRating($userId) {
         $desc_shortened = $description;
       }
 
-//     echo('
-//     <li class="list-group-item d-flex justify-content-between">
-//         <img src=' . $item_photo . ' alt=' . $title . ' class="img-fluid" style="max-width: 120px; max-height: 120px;">
-//         <div class="p-2 mr-5"><h5><a href="listing.php?item_id=' . $item_id . '">' . $title . '</a></h5>' . $desc_shortened . '</div>
-//         <div class="text-center text-nowrap">Your Bid Price:<br><span style="font-size: 1.5em">£' . number_format($your_bid, 2) . '</span><br/>' . $num_bids . $bid . '<br/>' . $time_remaining . '</div>
-//         <div class="text-center text-nowrap">Your Rating: <br><span style="font-size: 1.5em">' . $seller_rating . '</span></div>
-//         <div>' . if ($user_id == 2) {
-//                     echo "hello";
-//                 }; . '</div>   
-//     </li>'
-//   );
-
   echo '
   <li class="list-group-item d-flex justify-content-between">
       <img src=' . $item_photo . ' alt=' . $title . ' class="img-fluid" style="max-width: 120px; max-height: 120px;">
@@ -151,7 +130,7 @@ function getUserRating($userId) {
       <div class="text-center text-nowrap">Your Bid Price:<br><span style="font-size: 1.5em">£' . number_format($your_bid, 2) . '</span><br/>' . $num_bids . $bid . '<br/>' . $time_remaining . '</div>
       <div class="text-center text-nowrap">';
 
-      if (checkRated($user_id, $seller_id) == 0){
+      if (checkRated($user_id, $seller_id, $item_id) == 0){
         echo "Rate this Seller!";
         echo('
         <form method="post" action="">
@@ -167,7 +146,7 @@ function getUserRating($userId) {
         </form>');
       } else {
         echo ('Your Rating <br><span style="font-size: 1.5em">');
-        $seller_rating = getUserRating($seller_id);
+        $seller_rating = getUserRating($user_id, $seller_id, $item_id);
         echo $seller_rating;
       }
 
