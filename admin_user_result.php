@@ -5,7 +5,7 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $connection = db_connect();
-    $user_id = mysqli_real_escape_string($connection, $_POST['user_id']);
+    $user_id = $_POST['user_id'];
 
     // Determine the action: update or delete
     $action = $_POST['action'];

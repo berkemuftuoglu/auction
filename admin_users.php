@@ -29,7 +29,7 @@ $result = db_query($connection, $query);
         </tr>
       </thead>
       <tbody>
-        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+        <?php while ($row = db_fetch_single($result)) { ?>
           <tr>
             <td><?php echo $row['user_id']; ?></td>
             <td><?php echo $row['email']; ?></td>
