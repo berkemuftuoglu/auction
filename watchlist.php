@@ -69,7 +69,7 @@ WHERE
                 <div class="card" id="WatchlistCard" style="width: 18rem;">
                     <img class="card-img-top" src="<?php echo $item_photo ?? "/photos/empty.png"; ?>" alt="Card image cap">
                     <div class="card-body">
-                        <h5 class="card-title"><a href="listing.php?item_id='<?php echo $item_id; ?>"><?php echo $item_name; ?></a></h5>
+                        <h5 class="card-title"><a href="listing.php?item_id=<?php echo $item_id; ?>"><?php echo $item_name; ?></a></h5>
                         <p class="card-text"><?php echo $desc_shortened; ?></p>
                     </div>
                     <ul class="list-group list-group-flush">
