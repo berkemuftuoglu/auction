@@ -20,6 +20,8 @@ $user = db_fetch_single($result);
 db_free_result($result);
 db_disconnect($connection);
 
+
+
 function updateUserField($field, $new_value, $user_id) {
     $connection = db_connect();
 
@@ -27,6 +29,7 @@ function updateUserField($field, $new_value, $user_id) {
     $stmt = db_query($connection, $update_query);
 
     confirm_result_set($stmt);
+    echo '<div class="alert alert-success mt-3" role="alert"> Update successful, refresh the page! </div>';
 
     db_free_result($stmt);
     db_disconnect($connection);
@@ -56,6 +59,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
 }
 ?>
 
+
+
 <div class="container mt-5">
     <h2 class="my-3">Welcome, <?php echo $user['first_name']; ?>!</h2>
     <p>What would you like to do today?</p>
@@ -76,9 +81,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             db_disconnect($connection);
 
             echo '<h3>Selling Activites</h3>';
-            echo '<li><a href="/browse.php">Browse Listings</a></li>';
-            echo '<li><a href="/mylistings.php">See My Current Listings</a></li>';
-            echo '<li><a href="/create_auction.php">Create a New Auction</a></li>';
+
+            $browse = "browse.php";
+            $listings = "mylistings.php";
+            $auction = "create_auction.php";
+
+            echo '<li><a href="' . $browse . '">Browse Listings</a></li>';
+            echo '<li><a href="' . $listings . '">See My Current Listings</a></li>';
+            echo '<li><a href="' . $auction . '">Create a New Auction</a></li>';
             echo '<br>';
             echo '<h3>Your Current Rating is </h3>';
             if ($totalRatings == 0) {
@@ -90,76 +100,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
             echo '<br>';
         } elseif ($user['role'] == 1) {
             echo '<h3>Buying Activites</h3>';
-            echo '<li><a href="/browse.php">Browse Listings</a></li>';
-            echo '<li><a href="/mybids.php">See My Current Bids</a></li>';
-            echo '<li><a href="/watchlist.php">Check Out My Watchlist</a></li>';
-            echo '<li><a href="/recommendations.php">Look At Recommended Items</a></li>';
-            echo '<li><a href="/recommendations.php">Review Won Auctions and Rate Sellers</a></li>';
+
+            $browse = "browse.php";
+            $bids = "mybids.php.php";
+            $watchlist = "watchlist.php";
+            $recommendations = "recommendations.php";
+
+            echo '<li><a href="' . $browse . '">Browse Listings</a></li>';
+            echo '<li><a href="' . $bids . '">See My Current Bids</a></li>';
+            echo '<li><a href="' . $watchlist . '">Check Out My Watchlist</a></li>';
+            echo '<li><a href="' . $recommendations . '">Look At Recommended Items</a></li>';
             echo '<br>';
         };
     ?> 
     <h3>Update Profile Information</h3>
-    <table>
-        <tr>
-            <th>First Name</th>
-            <td><?php echo $user['first_name']?></td>
-            <td>
-                <form method="post" action="">
-                    <input type="hidden" name="user_id" value="<?php echo $user_id ?>">
+    <form method="post" action="">
+        <table>
+            <tr>
+                <th>First Name</th>
+                <td><?php echo $user['first_name']?></td>
+                <td>
                     <input type="text" name="new_first_name" placeholder="Change First Name">
-                    <input type="submit" name="submit" value="Update">
-                </form>
-            </td>
-        </tr>
-        <tr>
-            <th>Last Name</th>
-            <td><?php echo $user['last_name']?></td>
-            <td>
-                <form method="post" action="">
-                    <input type="hidden" name="user_id" value="<?php echo $user_id ?>">
+                </td>
+            </tr>
+            <tr>
+                <th>Last Name</th>
+                <td><?php echo $user['last_name']?></td>
+                <td>
                     <input type="text" name="new_last_name" placeholder="Change Last Name">
-                    <input type="submit" name="submit" value="Update">
-                </form>
-            </td>
-        </tr>
-        <tr>
-            <th>Email</th>
-            <td><?php echo $user['email']?></td>
-            <td>
-                <form method="post" action="">
-                    <input type="hidden" name="user_id" value="<?php echo $user_id ?>">
+                </td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td><?php echo $user['email']?></td>
+                <td>
                     <input type="text" name="new_email" placeholder="Change Email">
-                    <input type="submit" name="submit" value="Update">
-                </form>
-            </td>
-        </tr>
-        <tr>
-            <th>Role</th>
-            <td><?php if ($user['role'] == 0) {
-                    echo "Seller";
-                } elseif ($user['role'] == 1) {
-                    echo "Buyer";
-                } else {
-                    echo "Admin";
-                }?></td>
-            <td>
-                <form method="post" action="">
-                    <input type="hidden" name="user_id" value="<?php echo $user_id ?>">
-                    <input type="text" name="new_role" placeholder="Buyer or Seller">
-                    <input type="submit" name="submit" value="Update">
-                </form>
-            </td>
-        </tr>
-        <tr>
-            <th>Password</th>
-            <td><?php echo $user['password']?></td>
-            <td>
-                <form method="post" action="">
-                    <input type="hidden" name="user_id" value="<?php echo $user_id ?>">
+                </td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td><?php echo $user['password']?></td>
+                <td>
                     <input type="text" name="new_password" placeholder="Change Password">
-                    <input type="submit" name="submit" value="Update">
-                </form>
-            </td>
-        </tr>
-    </table>
+                </td>
+            </tr>
+        </table>
+
+        <input type="hidden" name="user_id" value="<?php echo $user_id ?>">
+        <input type="submit" name="submit" value="Update">
+    </form>
 </div>

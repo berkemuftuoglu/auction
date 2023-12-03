@@ -23,6 +23,13 @@
                 </label>
             </div>
             <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            <?php
+                // Determine the base URL dynamically
+                $register = 'register.php';
+
+                // Display the registration link with the dynamic base URL
+                echo '<p>Not a user? <a href="' . $register . '">Register</a></p>';
+            ?>
         </form>
     </div>
 </body>
