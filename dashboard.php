@@ -29,7 +29,6 @@ function updateUserField($field, $new_value, $user_id) {
     $stmt = db_query($connection, $update_query);
 
     confirm_result_set($stmt);
-    echo '<div class="alert alert-success mt-3" role="alert"> Update successful, refresh the page! </div>';
 
     db_free_result($stmt);
     db_disconnect($connection);
