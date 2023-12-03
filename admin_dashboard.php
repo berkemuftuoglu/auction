@@ -28,7 +28,6 @@ $top_categories_result = db_query($connection, $top_categories_query);
 <!doctype html>
 <html lang="en">
 <head>
-  <!-- ... [rest of the head] ... -->
 </head>
 <body>
 

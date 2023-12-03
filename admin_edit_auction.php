@@ -34,7 +34,6 @@ if (isset($_GET['auction_id'])) {
 <!doctype html>
 <html lang="en">
 <head>
-  <!-- ... [rest of the head] ... -->
 </head>
 <body>
   <div class="container mt-4">

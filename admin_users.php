@@ -13,7 +13,6 @@ $result = db_query($connection, $query);
 <!doctype html>
 <html lang="en">
 <head>
-  <!-- ... [rest of the head] ... -->
 </head>
 <body>
 

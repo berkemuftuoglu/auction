@@ -16,8 +16,6 @@ if (!$item_id) {
   exit;
 }
 
-
-
 // Establish database connection
 $connection = db_connect();
 
@@ -56,8 +54,8 @@ if ($auction_exists) {
   $bid_query = "SELECT b.price AS current_price, u.user_id, u.first_name, u.last_name, COUNT(*) AS num_bids
   FROM Bids b
   INNER JOIN Users u ON b.user_id = u.user_id
-  WHERE b.auction_id = '$item_id'
-  AND b.price = (SELECT MAX(price) FROM Bids WHERE auction_id = '$item_id')
+  WHERE b.auction_id = '$auction_id'
+  AND b.price = (SELECT MAX(price) FROM Bids WHERE auction_id = '$auction_id')
   GROUP BY b.price, u.user_id, u.first_name, u.last_name";
 
   $bid_result = db_query($connection, $bid_query);

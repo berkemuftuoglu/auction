@@ -27,7 +27,6 @@ if (isset($_GET['user_id'])) {
 <!doctype html>
 <html lang="en">
 <head>
-  <!-- ... [rest of the head] ... -->
 </head>
 <body>
 
