@@ -98,6 +98,7 @@ WHERE
         // Sends item ID as an argument to that function.
         var userId = event.target.getAttribute('data-userid');
         var itemId = event.target.getAttribute('data-itemid');
+
         var itemCard = $('.watchlist-item[data-itemid="' + itemId + '"]');
         $.ajax({
             url: 'watchlist_funcs.php',
@@ -111,6 +112,7 @@ WHERE
             success: function(obj, textstatus) {
                 // Callback function for when call is successful and returns obj
                 var objT = obj.trim();
+                console.log(objT);
 
                 if (objT == "success") {
                     itemCard.hide();

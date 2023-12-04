@@ -4,12 +4,13 @@
   session_start();
   $user_id = $_SESSION['user_id'];
   $item_id = $_POST['arguments'][0];
+ 
+  // Extract arguments from the POST variables:
+  $connection = db_connect();
 
   if (!isset($_POST['functionname'])) {
     return;
   }
-  // Extract arguments from the POST variables:
-  $connection = db_connect();
 
   if ($_POST['functionname'] == "add_to_watchlist") {
     
@@ -22,7 +23,9 @@
       $res = "failed";
     }
   } else if ($_POST['functionname'] == "remove_from_watchlist") {
-
+    if ($_POST['item_id']) {
+      $item_id = $_POST['item_id'];
+    }
     $sql = "DELETE FROM watchlist WHERE user_id = '$user_id' AND item_id = '$item_id'";
     $removeResult = mysqli_query($connection, $sql);
 
