@@ -66,7 +66,7 @@ WHERE
 
 
             <div class="col-md-4">
-                <div class="card" id="WatchlistCard" style="width: 18rem;">
+                <div class="card watchlist-item" data-itemid="<?php echo $item_id; ?>" style="width: 18rem;">
                     <img class="card-img-top" src="<?php echo $item_photo ?? "/photos/empty.png"; ?>" alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title"><a href="listing.php?item_id=<?php echo $item_id; ?>"><?php echo $item_name; ?></a></h5>
@@ -78,13 +78,10 @@ WHERE
                         <li class="list-group-item"><strong>Condition:</strong> <?php echo $item_condition; ?></li>
                     </ul>
                     <div class="card-body">
-                        <a href="#" onclick="removeFromWatchlist()" class="card-link" data-userid="<?php echo $user_id; ?>" data-itemid="<?php echo $item_id; ?>">Remove from Watchlist</a>
+                        <a href="#" onclick="removeFromWatchlist(event)" class="card-link" data-userid="<?php echo $user_id; ?>" data-itemid="<?php echo $item_id; ?>">Remove from Watchlist</a>
                     </div>
                 </div>
             </div>
-
-
-
 
         <?php
 
@@ -93,16 +90,16 @@ WHERE
     </div>
 </div>
 
-
 <script>
     // JavaScript functions: and removeFromWatchlist.
 
-    function removeFromWatchlist() {
+    function removeFromWatchlist(event) {
         // This performs an asynchronous call to a PHP function using POST method.
         // Sends item ID as an argument to that function.
         var userId = event.target.getAttribute('data-userid');
         var itemId = event.target.getAttribute('data-itemid');
-        var itemCard = $('#WatchlistCard');
+
+        var itemCard = $('.watchlist-item[data-itemid="' + itemId + '"]');
         $.ajax({
             url: 'watchlist_funcs.php',
             type: "POST",
@@ -115,6 +112,7 @@ WHERE
             success: function(obj, textstatus) {
                 // Callback function for when call is successful and returns obj
                 var objT = obj.trim();
+                console.log(objT);
 
                 if (objT == "success") {
                     itemCard.hide();
